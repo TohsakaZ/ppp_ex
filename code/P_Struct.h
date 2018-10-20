@@ -357,7 +357,7 @@ struct  Adjust_Scheme
 	int ion_corr_mode;        // 电离层改正选项 0 不改正 1 简化改正模型 2 SAAS模型 3 ZTD模型 4 ZTD+Grad 模型
     int niter;                // 滤波迭代次数
     
-    double thresslip = 0.5;         // 无几何距离组合周跳探测阈值
+    double thresslip;         // 无几何距离组合周跳探测阈值
 };
 
 //卫星信息和接收机信息结构体
