@@ -1,17 +1,17 @@
 /************************************************************************
 Beta1.0
-   ÐÞ¸ÄÊ±¼ä£º2017.7.17
-   ÐÞ¸ÄÄÚÈÝ£º1£©Íê³ÉÁË¶Ôµ¼º½µçÎÄÎÄ¼þµÄ¶ÁÈ¡¹¦ÄÜ¡£
+   ä¿®æ”¹æ—¶é—´ï¼š2017.7.17
+   ä¿®æ”¹å†…å®¹ï¼š1ï¼‰å®Œæˆäº†å¯¹å¯¼èˆªç”µæ–‡æ–‡ä»¶çš„è¯»å–åŠŸèƒ½ã€‚
    
 Beta1.1
-   ÐÞ¸ÄÊ±¼ä£º11:30 2017.7.18
-   ÐÞ¸ÄÄÚÈÝ£º1£©ÓÃstringstreamÌæ»»ÁËisstream£¬¶ÔÏà¹ØÓï¾ä×öÁËÐÞ¸Ä£¬¼õÉÙÁËstringstreamµÄ¹¹Ôì´ÎÊý¡£
-             2£©Ôö¼ÓÁË¶ÁÈënew_record.wnµÄÓï¾ä¡£
+   ä¿®æ”¹æ—¶é—´ï¼š11:30 2017.7.18
+   ä¿®æ”¹å†…å®¹ï¼š1ï¼‰ç”¨stringstreamæ›¿æ¢äº†isstreamï¼Œå¯¹ç›¸å…³è¯­å¥åšäº†ä¿®æ”¹ï¼Œå‡å°‘äº†stringstreamçš„æž„é€ æ¬¡æ•°ã€‚
+             2ï¼‰å¢žåŠ äº†è¯»å…¥new_record.wnçš„è¯­å¥ã€‚
 
 Beta1.11
-   ÐÞ¸ÄÊ±¼ä£º2017.7.18
-   ÐÞ¸ÄÄÚÈÝ£º1£©ÐÞ¸ÄÁË±äÁ¿Ãû¡£
-			2£©Ôö¼ÓÁËconst¡£
+   ä¿®æ”¹æ—¶é—´ï¼š2017.7.18
+   ä¿®æ”¹å†…å®¹ï¼š1ï¼‰ä¿®æ”¹äº†å˜é‡åã€‚
+			2ï¼‰å¢žåŠ äº†constã€‚
 
 
 *************************************************************************************/
@@ -33,11 +33,11 @@ NavFile::~NavFile()
 {
 }
 
-/**************¶¨Òå¶ÁÈ¡µ¼º½µçÎÄÎÄ¼þº¯Êý*********/
+/**************å®šä¹‰è¯»å–å¯¼èˆªç”µæ–‡æ–‡ä»¶å‡½æ•°*********/
 /*
-   º¯ÊýÃû£ºReadFile()
-   ÊäÈë£ºµ¼º½µçÎÄÎÄ¼þÃû
-   Êä³ö£º¶ÁÈ¡ÎÄ¼þÊÇ·ñ³É¹¦
+   å‡½æ•°åï¼šReadFile()
+   è¾“å…¥ï¼šå¯¼èˆªç”µæ–‡æ–‡ä»¶å
+   è¾“å‡ºï¼šè¯»å–æ–‡ä»¶æ˜¯å¦æˆåŠŸ
 */
 
 bool NavFile::ReadFile(const string & name)
@@ -47,16 +47,16 @@ bool NavFile::ReadFile(const string & name)
     ofstream log;
     log.open("Point_Positioning.log", ios::app);
     File.open(_filename);
-    log << "´ò¿ªµ¼º½µçÎÄÎÄ¼þ..." << _filename<<std::endl;
-    int line_count=0; //line_count¼ÇÂ¼ÐÐÊý
+    log << "æ‰“å¼€å¯¼èˆªç”µæ–‡æ–‡ä»¶..." << _filename<<std::endl;
+    int line_count=0; //line_countè®°å½•è¡Œæ•°
     if (!File.good())
     {
-        log << "´ò¿ªÊ§°Ü£¡" << endl;
+        log << "æ‰“å¼€å¤±è´¥ï¼" << endl;
         return false;
     }
 
-    /*********¶ÁÈ¡µ¼º½µçÎÄÍ·ÎÄ¼þ***************************/
-    string buffer;  //ÓÃÓÚ¶ÁÈ¡Ò»ÕûÐÐµÄÊý¾Ý
+    /*********è¯»å–å¯¼èˆªç”µæ–‡å¤´æ–‡ä»¶***************************/
+    string buffer;  //ç”¨äºŽè¯»å–ä¸€æ•´è¡Œçš„æ•°æ®
     while (File.good())
     {
         line_count++;
@@ -96,7 +96,7 @@ bool NavFile::ReadFile(const string & name)
         else if (buffer.find("END OF HEADER", 60) != string::npos)
         {
             _header.nheader_len = line_count;
-            log << "Í·ÎÄ¼þ¶ÁÈ¡Íê±Ï!" << endl;
+            log << "å¤´æ–‡ä»¶è¯»å–å®Œæ¯•!" << endl;
             break;
         }
 
@@ -107,7 +107,7 @@ bool NavFile::ReadFile(const string & name)
     int Rec_count = 0;
     NavRecord new_record;
 
-    /******************¶ÁÈ¡µ¼º½µçÎÄÊý¾Ý¼ÇÂ¼*****************************/
+    /******************è¯»å–å¯¼èˆªç”µæ–‡æ•°æ®è®°å½•*****************************/
     while (File.good())
     {
         std::getline(File, buffer);
@@ -117,19 +117,19 @@ bool NavFile::ReadFile(const string & name)
         }
 
 
-        if (buffer.length()<3) continue;  //ÅÐ¶ÏbufferÊÇ·ñÎª¿Õ
+        if (buffer.length()<3) continue;  //åˆ¤æ–­bufferæ˜¯å¦ä¸ºç©º
 
-        count = count % 8; //count¼ÇÂ¼Ò»Ìõ¼ÇÂ¼ÖÐµÄÐÐÊý
+        count = count % 8; //countè®°å½•ä¸€æ¡è®°å½•ä¸­çš„è¡Œæ•°
         count++;
-        line_count++;     //line_count¼ÇÂ¼Êý¾Ý×ÜÐÐÊý
+        line_count++;     //line_countè®°å½•æ•°æ®æ€»è¡Œæ•°
 
         if (count == 1)
         {
             string temp;
 
-            new_record = NavRecord();   //new_record¼ÇÂ¼±¾ÌõÊý¾Ý¼ÇÂ¼
+            new_record = NavRecord();   //new_recordè®°å½•æœ¬æ¡æ•°æ®è®°å½•
 
-            new_record.PRN[0] = 'G';       //¶ÁÈ¡ÎÀÐÇµÄPRNºÅ
+            new_record.PRN[0] = 'G';       //è¯»å–å«æ˜Ÿçš„PRNå·
             if (buffer[0] == ' ') buffer[0] = '0';
             new_record.PRN[1] = buffer[0];
             new_record.PRN[2] = buffer[1];
@@ -210,24 +210,24 @@ bool NavFile::ReadFile(const string & name)
             new_record.spare2 = atof(num_std(buffer.substr(60,19)).c_str());
             Rec_count++;
             new_record.TOC = TimeChange(new_record.TOC);
-            _data[new_record.PRN].insert(make_pair(new_record.TOC,new_record));  //½«¸ÃÌõ¼ÇÂ¼´æ´¢µ½dataÖÐ
+            _data[new_record.PRN].insert(make_pair(new_record.TOC,new_record));  //å°†è¯¥æ¡è®°å½•å­˜å‚¨åˆ°dataä¸­
             //_data[new_record.PRN][new_record.TOC] = new_record;
         }
     }
     _header.nrec_len = line_count;
 
-    log << "Êý¾Ý¼ÇÂ¼¶ÁÈ¡Íê±Ï!   ¹²¶ÁÈ¡" <<Rec_count<<"Ìõ¼ÇÂ¼¡£"<< endl;
+    log << "æ•°æ®è®°å½•è¯»å–å®Œæ¯•!   å…±è¯»å–" <<Rec_count<<"æ¡è®°å½•ã€‚"<< endl;
     log << endl;
     log.close();
     File.close();
       return true;
 }
 
-/**************¶¨Òå»ñÈ¡µ¼º½µçÎÄÊý¾Ý¼ÇÂ¼µÄº¯Êý*********/
+/**************å®šä¹‰èŽ·å–å¯¼èˆªç”µæ–‡æ•°æ®è®°å½•çš„å‡½æ•°*********/
 /*
-º¯ÊýÃû£ºData()
-ÊäÈë£ºËùÐèÒªµÄµ¼º½µçÎÄÊý¾Ý¼ÇÂ¼µÄÐòºÅ
-Êä³ö£ºµ¼º½µçÎÄÊý¾Ý¼ÇÂ¼
+å‡½æ•°åï¼šData()
+è¾“å…¥ï¼šæ‰€éœ€è¦çš„å¯¼èˆªç”µæ–‡æ•°æ®è®°å½•çš„åºå·
+è¾“å‡ºï¼šå¯¼èˆªç”µæ–‡æ•°æ®è®°å½•
 */
 //const NavRecord& NavFile::Data(int num)
 //{
@@ -239,11 +239,11 @@ bool NavFile::ReadFile(const string & name)
 //	else return _data[num];
 //}
 
-/**************¶¨Òå»ñÈ¡µ¼º½µçÎÄÊý¾Ý¼ÇÂ¼ÊýµÄº¯Êý*********/
+/**************å®šä¹‰èŽ·å–å¯¼èˆªç”µæ–‡æ•°æ®è®°å½•æ•°çš„å‡½æ•°*********/
 /*
-º¯ÊýÃû£ºgetDataNum()
-ÊäÈë£º
-Êä³ö£ºµ¼º½µçÎÄÊý¾Ý¼ÇÂ¼Êý
+å‡½æ•°åï¼šgetDataNum()
+è¾“å…¥ï¼š
+è¾“å‡ºï¼šå¯¼èˆªç”µæ–‡æ•°æ®è®°å½•æ•°
 */
 int NavFile::getDataNum() const
 {
@@ -251,23 +251,23 @@ int NavFile::getDataNum() const
 }
 
 
-/************¶¨Òå»ñÈ¡µ¼º½µçÎÄÎÄ¼þÃûº¯Êý**************/
+/************å®šä¹‰èŽ·å–å¯¼èˆªç”µæ–‡æ–‡ä»¶åå‡½æ•°**************/
 /*
-º¯ÊýÃû£ºgetName()
-ÊäÈë£º
-Êä³ö£ºµ¼º½µçÎÄÎÄ¼þµÄÎÄ¼þÃû
+å‡½æ•°åï¼šgetName()
+è¾“å…¥ï¼š
+è¾“å‡ºï¼šå¯¼èˆªç”µæ–‡æ–‡ä»¶çš„æ–‡ä»¶å
 */
 string NavFile::FileName() const
 {
 	return _filename;
 }
 
-/***************¶¨Òå»ñÈ¡µ¼º½µçÎÄ¼ÇÂ¼µÄº¯Êý***************************/
+/***************å®šä¹‰èŽ·å–å¯¼èˆªç”µæ–‡è®°å½•çš„å‡½æ•°***************************/
 /*
-   º¯ÊýÃû£ºGetRecord()
-   ÊäÈë£ºt    ÎÀÐÇ·¢ÉäÐÅºÅµÄGPSÊ±
-        prn  ÎÀÐÇµÄPRNºÅ
-   Êä³ö£ºÎÀÐÇµÄÐÇÀú¼ÇÂ¼
+   å‡½æ•°åï¼šGetRecord()
+   è¾“å…¥ï¼št    å«æ˜Ÿå‘å°„ä¿¡å·çš„GPSæ—¶
+        prn  å«æ˜Ÿçš„PRNå·
+   è¾“å‡ºï¼šå«æ˜Ÿçš„æ˜ŸåŽ†è®°å½•
 */
 NavRecord NavFile::GetRecord(GPSTime t, string prn) const
 {
@@ -288,11 +288,11 @@ NavRecord NavFile::GetRecord(GPSTime t, string prn) const
 	//return NavRecord();
 }
 
-/******************Ê±¼ä×ª»»º¯Êý*******************************/
+/******************æ—¶é—´è½¬æ¢å‡½æ•°*******************************/
 /*
-   º¯ÊýÃû£ºTimeChange()
-   ÊäÈë£ºt  ÎÀÐÇ·¢ÉäÐÅºÅµÄGPSÊ±
-   Êä³ö£º¶ÔÓ¦µÄÎÀÐÇÐÇÀú²Î¿¼Ê±¿Ì
+   å‡½æ•°åï¼šTimeChange()
+   è¾“å…¥ï¼št  å«æ˜Ÿå‘å°„ä¿¡å·çš„GPSæ—¶
+   è¾“å‡ºï¼šå¯¹åº”çš„å«æ˜Ÿæ˜ŸåŽ†å‚è€ƒæ—¶åˆ»
 */
 GPSTime NavFile::TimeChange(GPSTime t)
 {

@@ -1,12 +1,12 @@
 /*****************************************************************************
 Beta1.0
-   �޸�ʱ�䣺2017.7.18
-   �޸����ݣ�ʵ���˶�ȡGPS�۲������ļ�����
+   修改时间：2017.7.18
+   修改内容：实现了读取GPS观测数据文件函数
 
 Beta1.11
-   �޸�ʱ�䣺2017.7.18
-   �޸����ݣ�1���޸��˱�������
-            2��������һЩ������
+   修改时间：2017.7.18
+   修改内容：1）修改了变量名。
+            2）增加了一些函数。
 
 
 *******************************************************************************/
@@ -31,11 +31,11 @@ ObsFile:: ~ObsFile()
 
 }
 
-/**************�����ȡ�۲������ļ�����*********/
+/**************定义读取观测数据文件函数*********/
 /*
-��������ReadFile()
-���룺�۲������ļ���
-�������ȡ�ļ��Ƿ�ɹ�
+函数名：ReadFile()
+输入：观测数据文件名
+输出：读取文件是否成功
 */
 
 bool ObsFile::ReadFile(const string &name)
@@ -45,18 +45,18 @@ bool ObsFile::ReadFile(const string &name)
 	ofstream log;
 	log.open("Point_Positioning.log", ios::app);
 	File.open(_filename);
-//	log << "�򿪹۲������ļ�..." << _filename << std::endl;
-	int line_count = 0;//line_count ��¼����
+//	log << "打开观测数据文件..." << _filename << std::endl;
+	int line_count = 0;//line_count 记录行数
 	if (!File.good())
 	{
-//		log << "��ʧ�ܣ�" << endl;
+//		log << "打开失败！" << endl;
 		return false;
 	}
 
 
 
-	/*********��ȡ�۲�����ͷ�ļ�***************************/
-	string buffer;//��ȡһ���е�����
+	/*********读取观测数据头文件***************************/
+	string buffer;//读取一整行的数据
 //	std::stringstream ss;
 
 
@@ -66,8 +66,8 @@ bool ObsFile::ReadFile(const string &name)
 		getline(File, buffer);
 		
 //		ss.clear();
-//		ss.str("");   //���stringstream
-//		ss << buffer;   //��buffer����ss
+//		ss.str("");   //清空stringstream
+//		ss << buffer;   //将buffer读入ss
 		
 		if (buffer.find("RINEX VERSION / TYPE",60)!=string::npos)
 		{
@@ -114,7 +114,7 @@ bool ObsFile::ReadFile(const string &name)
 		}
 		else if (buffer.find("WAVELENGTH FACT L1/2", 60) != string::npos)
 		{
-			//�ֽ׶�δ���� �����ز���������
+			//现阶段未处理 处理载波波长因子
 		}
 		else if (buffer.find("# / TYPES OF OBSERV", 60) != string::npos)
 		{
@@ -139,7 +139,7 @@ bool ObsFile::ReadFile(const string &name)
 					//_header.obsType[i][1] = tempA[1];
 				}
 
-				//��ȡ����
+				//读取续行
 				getline(File, buffer);
 //				ss.clear();
 //				ss.str(buffer);
@@ -200,7 +200,7 @@ bool ObsFile::ReadFile(const string &name)
 		else if (buffer.find("END OF HEADER", 60) != string::npos)
 		{
 			_header.headLineNumber = line_count;
-//			log << "ͷ�ļ���ȡ���!" << endl;
+//			log << "头文件读取完毕!" << endl;
 			break;
 		}
 	}
@@ -211,7 +211,7 @@ bool ObsFile::ReadFile(const string &name)
 	ObsRecord new_record;
 
     int test_count =0;
-	/*********��ȡ�۲����ݼ�¼***************************/
+	/*********读取观测数据记录***************************/
 	while (File.good())
 	{
         test_count++;
@@ -222,15 +222,15 @@ bool ObsFile::ReadFile(const string &name)
 		string buffer;
 		new_record = ObsRecord();
 
-		/***************��ȡ�۲��ļ����ݼ�¼�ڵ���Ԫ���¼���־******************/
+		/***************读取观测文件数据记录节的历元或事件标志******************/
 		getline(File, buffer);
         if (buffer =="")
             break;
-        //ss.str("");   //���stringstream
+        //ss.str("");   //清空stringstream
 		//ss.clear();
-		//ss << buffer;   //��buffer����ss
+		//ss << buffer;   //将buffer读入ss
 		
-		//��ȡ�۲���Ԫʱ��
+		//读取观测历元时刻
         new_record.obstime_c.year = atoi(buffer.substr(1,2).c_str());
         new_record.obstime_c.month = atoi(buffer.substr(4,2).c_str());
         new_record.obstime_c.day = atoi(buffer.substr(7,2).c_str());
@@ -257,10 +257,10 @@ bool ObsFile::ReadFile(const string &name)
         new_record.epoch_mark = atoi(buffer.substr(27,2).c_str());
         new_record.sat_num = atoi(buffer.substr(30,2).c_str());
         
-/*		ss >> new_record.epoch_mark;//��ȡ��Ԫ��־
-		ss >> new_record.sat_num;//��ȡ���Ǹ���   */
+/*		ss >> new_record.epoch_mark;//读取历元标志
+		ss >> new_record.sat_num;//读取卫星个数   */
         
-		//��ȡ���ǵ�PRN�б�
+		//读取卫星的PRN列表
 		string PRN;
         int satnum_count1,satnum_count2;
         satnum_count1 = new_record.sat_num / 12;
@@ -279,7 +279,7 @@ bool ObsFile::ReadFile(const string &name)
         }
         
         
-//        if (new_record.sat_num > 12)//���������>12��Ҫ��ȡ����
+//        if (new_record.sat_num > 12)//如果卫星数>12需要读取续航
 //        {
 //            //ss >> PRN;
 //            for (int i = 0; i < 12; i++)
@@ -289,7 +289,7 @@ bool ObsFile::ReadFile(const string &name)
 //                //new_record.obsdata[i].PRN[1] = PRN[3 * i + 1];
 //                //new_record.obsdata[i].PRN[2] = PRN[3 * i + 2];
 //            }
-//            //��ȡ����PRN�б�����
+//            //读取卫星PRN列表续行
 //            getline(File, buffer);
 //
 ///*            ss.clear();
@@ -316,10 +316,10 @@ bool ObsFile::ReadFile(const string &name)
 //            }
 //        }
 
-		/****************��ȡ�۲������ļ����ݼ�¼��****************/
+		/****************读取观测数据文件数据记录节****************/
 	
-		int temp1 = _header.obsTypeNumber / 5; //��¼���ݼ�¼�ڵ�������
-		int temp2 = _header.obsTypeNumber % 5; //��¼���ݼ�¼�ڵ�
+		int temp1 = _header.obsTypeNumber / 5; //记录数据记录节的整行数
+		int temp2 = _header.obsTypeNumber % 5; //记录数据记录节的
 		for (int i = 0; i < new_record.sat_num;i++)
 		{
 			for (int j = 0; j < temp1; j++)
@@ -355,7 +355,7 @@ bool ObsFile::ReadFile(const string &name)
 		_data.push_back(new_record);       
 	}
 
-//	log << "���ݼ�¼��ȡ���!   ����ȡ" << _data.size() << "����¼��" << endl;
+//	log << "数据记录读取完毕!   共读取" << _data.size() << "条记录。" << endl;
 	log << endl;
 	log.close();
 	File.close();
@@ -365,22 +365,22 @@ bool ObsFile::ReadFile(const string &name)
 	return true;
 }
 
-/**************�����ȡ�۲������ļ����ĺ���*********/
+/**************定义获取观测数据文件名的函数*********/
 /*
-��������getName()
-���룺
-������۲������ļ���
+函数名：getName()
+输入：
+输出：观测数据文件名
 */
 string ObsFile::getName() const
 {
 	return _filename;
 }
 
-/**************�����ȡ�۲����ݼ�¼�ĺ���*********/
+/**************定义获取观测数据记录的函数*********/
 /*
-��������Data()
-���룺����Ҫ�Ĺ۲����ݼ�¼�����
-������۲����ݼ�¼
+函数名：Data()
+输入：所需要的观测数据记录的序号
+输出：观测数据记录
 */
 ObsRecord ObsFile::Data(int num) const
 {
@@ -391,11 +391,11 @@ ObsRecord ObsFile::Data(int num) const
 	return _data[num];
 }
 
-/**************�����ȡ�۲����ݼ�¼���ĺ���*********/
+/**************定义获取观测数据记录数的函数*********/
 /*
-��������getDataNum()
-���룺
-������۲����ݼ�¼��
+函数名：getDataNum()
+输入：
+输出：观测数据记录数
 */
 int ObsFile::getDataNum() const
 {

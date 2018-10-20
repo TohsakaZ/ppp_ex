@@ -1,7 +1,7 @@
 /*****************************************************************************
 Beta1.0
-    ÐÞ¸ÄÊ±¼ä£º2017.7.18
-    ÐÞ¸ÄÄÚÈÝ£º¶¨Òå×ø±ê×ª»»º¯Êý
+    ä¿®æ”¹æ—¶é—´ï¼š2017.7.18
+    ä¿®æ”¹å†…å®¹ï¼šå®šä¹‰åæ ‡è½¬æ¢å‡½æ•°
 
 
 
@@ -19,13 +19,13 @@ public:
 	~CoordTrans();
 
 public:
-	/*******************************¶¨Òå×ø±ê×ª»»º¯Êý**************************************/
-	static Geodetic Cart2Geod(const Cartesian &X); //µÑ¿¨¶û×ø±êÏµ->´óµØ×ø±êÏµ
-	static Cartesian Geod2Cart(const Geodetic &G); //´óµØ×ø±êÏµ->µÑ¿¨¶û×ø±êÏµ
-	static Topocentric Cart2Topo(const Cartesian &X1, const Cartesian &X2); //µÑ¿¨¶û×ø±êÏµ->Õ¾ÐÄÏß×ø±êÏµ
-	static Cartesian Topo2Cart(const Cartesian &X1, const Topocentric &T2); //Õ¾ÐÄÏß×ø±êÏµ->µÑ¿¨¶û×ø±êÏµ
-	static Topopolar Topo2Topop(const Topocentric &Tc); //Õ¾ÐÄÏß×ø±êÏµ->Õ¾ÐÄ¼«×ø±êÏµ
-	static Topocentric Topop2Topo(const Topopolar &Tp); //Õ¾ÐÄ¼«×ø±êÏµ->Õ¾ÐÄÏß×ø±êÏµ
+	/*******************************å®šä¹‰åæ ‡è½¬æ¢å‡½æ•°**************************************/
+	static Geodetic Cart2Geod(const Cartesian &X); //ç¬›å¡å°”åæ ‡ç³»->å¤§åœ°åæ ‡ç³»
+	static Cartesian Geod2Cart(const Geodetic &G); //å¤§åœ°åæ ‡ç³»->ç¬›å¡å°”åæ ‡ç³»
+	static Topocentric Cart2Topo(const Cartesian &X1, const Cartesian &X2); //ç¬›å¡å°”åæ ‡ç³»->ç«™å¿ƒçº¿åæ ‡ç³»
+	static Cartesian Topo2Cart(const Cartesian &X1, const Topocentric &T2); //ç«™å¿ƒçº¿åæ ‡ç³»->ç¬›å¡å°”åæ ‡ç³»
+	static Topopolar Topo2Topop(const Topocentric &Tc); //ç«™å¿ƒçº¿åæ ‡ç³»->ç«™å¿ƒæžåæ ‡ç³»
+	static Topocentric Topop2Topo(const Topopolar &Tp); //ç«™å¿ƒæžåæ ‡ç³»->ç«™å¿ƒçº¿åæ ‡ç³»
 
 };
 

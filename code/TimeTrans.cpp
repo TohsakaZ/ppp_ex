@@ -1,14 +1,14 @@
 /*************************************************
 Beta1.1
-    ĞŞ¸ÄÊ±¼ä£º2017.07.18
-    ĞŞ¸ÄÄÚÈİ£ºÊµÏÖÁË²»Í¬Ê±¼äµÄ×ª»»º¯Êı
+    ä¿®æ”¹æ—¶é—´ï¼š2017.07.18
+    ä¿®æ”¹å†…å®¹ï¼šå®ç°äº†ä¸åŒæ—¶é—´çš„è½¬æ¢å‡½æ•°
 
 *************************************************/
 #include<math.h>
 #include "TimeTrans.h"
 
 
-/**************Í¨ÓÃÊ±¼ä×ª GPS Ê±***************************/
+/**************é€šç”¨æ—¶é—´è½¬ GPS æ—¶***************************/
 GPSTime TimeTrans::CalendarTime2GPSTime(const CalendarTime &A)
 {
     const int doy[]={1,32,60,91,121,152,182,213,244,274,305,335};
@@ -25,13 +25,13 @@ GPSTime TimeTrans::CalendarTime2GPSTime(const CalendarTime &A)
     
 }
 
-/***********Í¨ÓÃÊ±×ªÈåÂÔÈÕ*********************************/
-/*        ÊäÈë£ºÍ¨ÓÃÊ±   A
+/***********é€šç”¨æ—¶è½¬å„’ç•¥æ—¥*********************************/
+/*        è¾“å…¥ï¼šé€šç”¨æ—¶   A
 
-          Êä³ö£ºÈåÂÔÈÕ  B  */
+          è¾“å‡ºï¼šå„’ç•¥æ—¥  B  */
 JulianDay TimeTrans::CalendarTime2JulianDay(const CalendarTime &A)//
 {
-	int y, m;//¶ÔÄêÔÂ½øĞĞ¸ÄÕı
+	int y, m;//å¯¹å¹´æœˆè¿›è¡Œæ”¹æ­£
 	if (A.month <= 2)
 	{
 		y = A.year - 1;
@@ -54,10 +54,10 @@ JulianDay TimeTrans::CalendarTime2JulianDay(const CalendarTime &A)//
 
 
 
-/***********ÈåÂÔÈÕ×ªÍ¨ÓÃÊ±*********************************/
-/*        ÊäÈë£ºÈåÂÔÈÕ   A
+/***********å„’ç•¥æ—¥è½¬é€šç”¨æ—¶*********************************/
+/*        è¾“å…¥ï¼šå„’ç•¥æ—¥   A
 
-          Êä³ö£ºÍ¨ÓÃÊ±   B */
+          è¾“å‡ºï¼šé€šç”¨æ—¶   B */
 
 CalendarTime TimeTrans::JulianDay2CalendarTime(const JulianDay &A)
 {
@@ -86,10 +86,10 @@ CalendarTime TimeTrans::JulianDay2CalendarTime(const JulianDay &A)
 
 
 
-/***********ÈåÂÔÈÕ×ªGPSÊ±*********************************/
-/*        ÊäÈë£ºÈåÂÔÈÕ   A
+/***********å„’ç•¥æ—¥è½¬GPSæ—¶*********************************/
+/*        è¾“å…¥ï¼šå„’ç•¥æ—¥   A
 
-          Êä³ö£ºGPSÊ±   B */
+          è¾“å‡ºï¼šGPSæ—¶   B */
 GPSTime TimeTrans::JulianDay2GPSTime(const JulianDay &A)
 {
 	GPSTime B;
@@ -101,15 +101,15 @@ GPSTime TimeTrans::JulianDay2GPSTime(const JulianDay &A)
 }
 
 
-/***********GPSÊ±×ªÈåÂÔÈÕ*********************************/
-/*        ÊäÈë£ºGPSÊ±  A
+/***********GPSæ—¶è½¬å„’ç•¥æ—¥*********************************/
+/*        è¾“å…¥ï¼šGPSæ—¶  A
 
-         Êä³ö£ºÈåÂÔÈÕ   B */
+         è¾“å‡ºï¼šå„’ç•¥æ—¥   B */
 JulianDay TimeTrans::GPSTime2JulianDay(const GPSTime &A)
 {
 	JulianDay B;
 	B.day = floor (44244 + A.wn * 7 + (A.tow.sn + A.tow.tos) / 86400.0 + 2400000.5);
-	double d = 44244 + A.wn * 7 +(A.tow.sn +A.tow.tos) / 86400.0 + 2400000.5-B.day;//Îª0.nÌì
+	double d = 44244 + A.wn * 7 +(A.tow.sn +A.tow.tos) / 86400.0 + 2400000.5-B.day;//ä¸º0.nå¤©
 	double e = floor(d*60.0*60.0*24.0);
 	B.tod.sn = e;
 	B.tod.tos = 60.0*60.0*24.0*d - e;
@@ -120,10 +120,10 @@ JulianDay TimeTrans::GPSTime2JulianDay(const GPSTime &A)
 
 
 
-/***********Í¨ÓÃÊ±×ª»»Äê»ıÈÕ*********************************/
-/*        ÊäÈë£ºÍ¨ÓÃÊ±  A
+/***********é€šç”¨æ—¶è½¬æ¢å¹´ç§¯æ—¥*********************************/
+/*        è¾“å…¥ï¼šé€šç”¨æ—¶  A
 
-          Êä³ö£ºÄê»ıÈÕ   B£¨ÕûÊı£© */
+          è¾“å‡ºï¼šå¹´ç§¯æ—¥   Bï¼ˆæ•´æ•°ï¼‰ */
 DayofYear TimeTrans::CalendarTime2DayofYear(const CalendarTime &A)
 {
 	DayofYear B;

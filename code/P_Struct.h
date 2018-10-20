@@ -1,11 +1,11 @@
 /************************************************************************
 Beta1.0
-   ĞŞ¸ÄÊ±¼ä£º2017.7.17
-   ĞŞ¸ÄÄÚÈİ£º1£©Íê³ÉÁË¸÷ÖÖ½á¹¹ÌåµÄ¶¨Òå¡£
+   ä¿®æ”¹æ—¶é—´ï¼š2017.7.17
+   ä¿®æ”¹å†…å®¹ï¼š1ï¼‰å®Œæˆäº†å„ç§ç»“æ„ä½“çš„å®šä¹‰ã€‚
    
 Beta1.1
-   ĞŞ¸ÄÊ±¼ä£º2017.7.18
-   ĞŞ¸ÄÄÚÈİ£º1£©Ôö¼ÓÁËNavRecordÖĞµÄwn±äÁ¿¡££¨ÓÃÓÚ±íÊ¾ÖÜÊı£©
+   ä¿®æ”¹æ—¶é—´ï¼š2017.7.18
+   ä¿®æ”¹å†…å®¹ï¼š1ï¼‰å¢åŠ äº†NavRecordä¸­çš„wnå˜é‡ã€‚ï¼ˆç”¨äºè¡¨ç¤ºå‘¨æ•°ï¼‰
 
 
 
@@ -21,7 +21,7 @@ Beta1.1
 using namespace std;
 
 
-/******************************************¶¨Òå³£Á¿*************************************************************/
+/******************************************å®šä¹‰å¸¸é‡*************************************************************/
 const double a = 6378137;
 const double e2 = 0.00669437999013;
 const double pi = 3.14159265358979324;
@@ -38,12 +38,12 @@ const double ura_eph[]={         /* ura values (ref [3] 20.3.3.3.1.1) */
     3072.0,6144.0,0.0
 };
 
-/***************************************ÎÀĞÇÏµÍ³³£Á¿*************************/
-#define MAXGPS 50    //GPSÎÀĞÇÏµÍ³×î´óÊıÁ¿
+/***************************************å«æ˜Ÿç³»ç»Ÿå¸¸é‡*************************/
+#define MAXGPS 50    //GPSå«æ˜Ÿç³»ç»Ÿæœ€å¤§æ•°é‡
 
 
 
-#define IB(s,opt)    ((s) + 3 + 1  + (opt.ion_corr_mode>=3?0:0) -1) //È·¶¨ÎÀĞÇÊıË÷Òı
+#define IB(s,opt)    ((s) + 3 + 1  + (opt.ion_corr_mode>=3?0:0) -1) //ç¡®å®šå«æ˜Ÿæ•°ç´¢å¼•
 
 #define SQR(x)      ((x)*(x))
 
@@ -60,28 +60,28 @@ const double ura_eph[]={         /* ura values (ref [3] 20.3.3.3.1.1) */
 #define VAR_GRA     SQR(0.001) /* initial variance of gradient (m^2) */
 #define VAR_BIAS    SQR( 30.0) /* initial variance of phase-bias (m^2) */
 
-const double lamda0 = c/(1575.42E6);  //GPSÉÏL1ÔØ²¨²¨³¤£¨m£©
-const double lamda1 = c/120.0/10.23E6;  //GPSÉÏL2ÔØ²¨²¨³¤£¨m£©
+const double lamda0 = c/(1575.42E6);  //GPSä¸ŠL1è½½æ³¢æ³¢é•¿ï¼ˆmï¼‰
+const double lamda1 = c/120.0/10.23E6;  //GPSä¸ŠL2è½½æ³¢æ³¢é•¿ï¼ˆmï¼‰
 
-/*****************************************¶¨ÒåÊı¾İ½á¹¹Ìå*******************************************************/
+/*****************************************å®šä¹‰æ•°æ®ç»“æ„ä½“*******************************************************/
 
-//Ê±¼ä½á¹¹Ìå
+//æ—¶é—´ç»“æ„ä½“
 
-/*****µ±Ç°Ê±¿Ì*****/
+/*****å½“å‰æ—¶åˆ»*****/
 struct TimeofDay
 {
-	int sn; //Ãë
-	double tos; //ÃëµÄĞ¡Êı²¿·Ö
+	int sn; //ç§’
+	double tos; //ç§’çš„å°æ•°éƒ¨åˆ†
 };
 
-/*****µ±Ç°ÖÜ*******/
+/*****å½“å‰å‘¨*******/
 struct TimeofWeek
 {
 	int sn;
 	double tos;
 };
 
-/****Í¨ÓÃÊ±******/
+/****é€šç”¨æ—¶******/
 struct CalendarTime
 {
 	int year;
@@ -103,27 +103,27 @@ struct CalendarTime
 	}
 };
 
-/****ÈåÂÔÈÕ*******/
+/****å„’ç•¥æ—¥*******/
 struct JulianDay
 {
 	int day;
-	TimeofDay tod; //µ±Ç°Ê±¿Ì
+	TimeofDay tod; //å½“å‰æ—¶åˆ»
 };
 
-/****Äê»ıÈÕ*******/
+/****å¹´ç§¯æ—¥*******/
 struct DayofYear
 {
 	int  year;
 	int  day;
 };
 
-/****GPSÊ±********/
+/****GPSæ—¶********/
 struct GPSTime
 {
-	int wn; //ÖÜÊı
-	TimeofWeek tow;//Ê±¿Ì
+	int wn; //å‘¨æ•°
+	TimeofWeek tow;//æ—¶åˆ»
 
-	friend bool operator < (const GPSTime &t1, const GPSTime &t2)//¶¨ÒåÁËGPSTimeµÄ"<"ÔËËã£¬ÕâÑùµÄ»°GPSTime½á¹¹¾Í¿ÉÒÔ×÷ÎªmapÈİÆ÷µÄ¼üÖµ
+	friend bool operator < (const GPSTime &t1, const GPSTime &t2)//å®šä¹‰äº†GPSTimeçš„"<"è¿ç®—ï¼Œè¿™æ ·çš„è¯GPSTimeç»“æ„å°±å¯ä»¥ä½œä¸ºmapå®¹å™¨çš„é”®å€¼
 	{
 		return (t1.wn + (t1.tow.sn+t1.tow.tos) / 604800) < (t2.wn + (t2.tow.sn+t2.tow.tos) / 604800);
 	}
@@ -136,7 +136,7 @@ struct GPSTime
         return tt;
     }
 
-	GPSTime operator +(const double &t2) const//»¹Ã»²âÊÔ
+	GPSTime operator +(const double &t2) const//è¿˜æ²¡æµ‹è¯•
 	{
 		GPSTime new_t = { wn,tow };
 		new_t.tow.tos += t2;
@@ -169,9 +169,9 @@ struct GPSTime
 
 
 
-//×ø±êÏµ½á¹¹
+//åæ ‡ç³»ç»“æ„
 
-/*****µÑ¿¨¶û×ø±êÏµ******/
+/*****ç¬›å¡å°”åæ ‡ç³»******/
 struct Cartesian
 {
 	double X;
@@ -198,202 +198,202 @@ struct Cartesian
 
 };
 
-/*******´óµØ×ø±êÏµ******/
+/*******å¤§åœ°åæ ‡ç³»******/
 struct Geodetic
 {
-	double B;//´óµØ¾­¶È£¨¶È£©
-	double L;//´óµØÎ³¶È£¨¶È£©
-	double H;//´óµØ¸ß£¨Ã×£©
+	double B;//å¤§åœ°ç»åº¦ï¼ˆåº¦ï¼‰
+	double L;//å¤§åœ°çº¬åº¦ï¼ˆåº¦ï¼‰
+	double H;//å¤§åœ°é«˜ï¼ˆç±³ï¼‰
 };
 
-/*******Õ¾ĞÄµØÆ½×ø±êÏµ£¨Ïß×ø±ê£©***/
+/*******ç«™å¿ƒåœ°å¹³åæ ‡ç³»ï¼ˆçº¿åæ ‡ï¼‰***/
 struct Topocentric
 {
-	double N;//±±·½Ïò£¨Ã×)
-	double E;//¶«·½Ïò£¨Ã×£©
-	double U;//Ìì¶¥·½Ïò(Ã×)
+	double N;//åŒ—æ–¹å‘ï¼ˆç±³)
+	double E;//ä¸œæ–¹å‘ï¼ˆç±³ï¼‰
+	double U;//å¤©é¡¶æ–¹å‘(ç±³)
 };
 
-/*******Õ¾ĞÄµØÆ½×ø±êÏµ£¨¼«×ø±ê£©***/
+/*******ç«™å¿ƒåœ°å¹³åæ ‡ç³»ï¼ˆæåæ ‡ï¼‰***/
 struct Topopolar
 {
-	double S;//µ½Õ¾ĞÄ¾àÀë£¨Ã×£©
-	double E;//ĞÇÊÓÑö½Ç£¨¶È£©
-	double A;//ĞÇÊÓ·½Ïò½Ç£¨¶È£©
+	double S;//åˆ°ç«™å¿ƒè·ç¦»ï¼ˆç±³ï¼‰
+	double E;//æ˜Ÿè§†ä»°è§’ï¼ˆåº¦ï¼‰
+	double A;//æ˜Ÿè§†æ–¹å‘è§’ï¼ˆåº¦ï¼‰
 };
 
-//ÎÀĞÇ¹Û²âÊı¾İ½á¹¹Ìå
-/*******¹Û²âÊı¾İÍ·ÎÄ¼ş*************/
+//å«æ˜Ÿè§‚æµ‹æ•°æ®ç»“æ„ä½“
+/*******è§‚æµ‹æ•°æ®å¤´æ–‡ä»¶*************/
 struct GPSObsHdr
 {
-	double RINEX_version;//°æ±¾ºÅ
+	double RINEX_version;//ç‰ˆæœ¬å·
 	char RINEX_type;
-	string mark_name;//ÌìÏß±êÖ¾µÄÃû³Æ£¨µãÃû£©
-	string mark_number;//ÌìÏß±êÖ¾±àºÅ£»
-	string receiverNumber; //½ÓÊÕ»úĞòÁĞºÅ
-	string receiverType;   //½ÓÊÕ»úÀàĞÍ
-	string recerverVersion; //½ÓÊÕ»ú°æ±¾ºÅ
-	string antennaNumber;//ÌìÏßĞòÁĞºÅ
-	string antennaType;//ÌìÏßÀàĞÍ
-	Cartesian approxPos; //²âÕ¾±êÖ¾µÄ½üËÆÎ»ÖÃ£¨WGS-84£©
-	Topocentric antennaDelta; //ÌìÏßÖĞĞÄÏà¶ÔÓÚ²âÕ¾±êÖ¾µÄÎ»ÖÃ
-	int obsTypeNumber;//¹Û²âÖµÀàĞÍÊıÄ¿
-	char obsType[maxtypeofobs][2]; //¾ßÌå¹Û²âÀàĞÍ
-	double interval; //¹Û²âÖµµÄÀúÔª¼ä¸ô£¨Ãë£©
-	int leap_sec; //×Ô1980Äê1ÔÂ6ÈÕÒÔÀ´µÄÌøÃëÊı
-	GPSTime startTime; //Êı¾İÎÄ¼şµÚÒ»¸ö¹Û²â¼ÇÂ¼µÄÊ±¿Ì
-	GPSTime endTime; //Êı¾İÎÄ¼ş×îºóÒ»¸ö¹Û²â¼ÇÂ¼µÄÊ±¿Ì
-	int headLineNumber; //Í·ÎÄ¼ş×îºóÒ»ĞĞĞĞºÅ
+	string mark_name;//å¤©çº¿æ ‡å¿—çš„åç§°ï¼ˆç‚¹åï¼‰
+	string mark_number;//å¤©çº¿æ ‡å¿—ç¼–å·ï¼›
+	string receiverNumber; //æ¥æ”¶æœºåºåˆ—å·
+	string receiverType;   //æ¥æ”¶æœºç±»å‹
+	string recerverVersion; //æ¥æ”¶æœºç‰ˆæœ¬å·
+	string antennaNumber;//å¤©çº¿åºåˆ—å·
+	string antennaType;//å¤©çº¿ç±»å‹
+	Cartesian approxPos; //æµ‹ç«™æ ‡å¿—çš„è¿‘ä¼¼ä½ç½®ï¼ˆWGS-84ï¼‰
+	Topocentric antennaDelta; //å¤©çº¿ä¸­å¿ƒç›¸å¯¹äºæµ‹ç«™æ ‡å¿—çš„ä½ç½®
+	int obsTypeNumber;//è§‚æµ‹å€¼ç±»å‹æ•°ç›®
+	char obsType[maxtypeofobs][2]; //å…·ä½“è§‚æµ‹ç±»å‹
+	double interval; //è§‚æµ‹å€¼çš„å†å…ƒé—´éš”ï¼ˆç§’ï¼‰
+	int leap_sec; //è‡ª1980å¹´1æœˆ6æ—¥ä»¥æ¥çš„è·³ç§’æ•°
+	GPSTime startTime; //æ•°æ®æ–‡ä»¶ç¬¬ä¸€ä¸ªè§‚æµ‹è®°å½•çš„æ—¶åˆ»
+	GPSTime endTime; //æ•°æ®æ–‡ä»¶æœ€åä¸€ä¸ªè§‚æµ‹è®°å½•çš„æ—¶åˆ»
+	int headLineNumber; //å¤´æ–‡ä»¶æœ€åä¸€è¡Œè¡Œå·
 };
-/******Ã¿Ìõ¹Û²âÊı¾İÎÄ¼şµÄ½á¹¹Ìå*****/
+/******æ¯æ¡è§‚æµ‹æ•°æ®æ–‡ä»¶çš„ç»“æ„ä½“*****/
 struct GpsObservation
 {
-	char PRN[3];//ÎÀĞÇÃû
-    double P[3]; //Î±¾à¹Û²âÖµ
-    double L[3]; //ÔØ²¨ÏàÎ»¹Û²âÖµ
-    double D[3]; //¶àÆÕÀÕ¹Û²âÖµ
-	double obs[maxtypeofobs];    //¹Û²âÖµ
-	int LLI[maxtypeofobs];       //LLI(Ê§Ëø±êÊ¶·û£©
-	int signal_str[maxtypeofobs]; //ĞÅºÅÇ¿¶È
+	char PRN[3];//å«æ˜Ÿå
+    double P[3]; //ä¼ªè·è§‚æµ‹å€¼
+    double L[3]; //è½½æ³¢ç›¸ä½è§‚æµ‹å€¼
+    double D[3]; //å¤šæ™®å‹’è§‚æµ‹å€¼
+	double obs[maxtypeofobs];    //è§‚æµ‹å€¼
+	int LLI[maxtypeofobs];       //LLI(å¤±é”æ ‡è¯†ç¬¦ï¼‰
+	int signal_str[maxtypeofobs]; //ä¿¡å·å¼ºåº¦
 };
 
-/******ÕûÌõ¹Û²â¼ÇÂ¼µÄ½á¹¹Ìå**********/
+/******æ•´æ¡è§‚æµ‹è®°å½•çš„ç»“æ„ä½“**********/
 struct ObsRecord
 {
-	GPSTime obstime;      //¹Û²âÀúÔªÊ±¿ÌGPSÊ±
-	CalendarTime obstime_c;  //¹Û²âÀúÔªÊ±¿ÌÍ¨ÓÃÊ±
-	int epoch_mark;       // ÀúÔª±êÖ¾
-	int sat_num;          // µ±Ç°ÀúÔªËù¹Û²âµ½µÄÎÀĞÇÊı
+	GPSTime obstime;      //è§‚æµ‹å†å…ƒæ—¶åˆ»GPSæ—¶
+	CalendarTime obstime_c;  //è§‚æµ‹å†å…ƒæ—¶åˆ»é€šç”¨æ—¶
+	int epoch_mark;       // å†å…ƒæ ‡å¿—
+	int sat_num;          // å½“å‰å†å…ƒæ‰€è§‚æµ‹åˆ°çš„å«æ˜Ÿæ•°
 	GpsObservation obsdata[maxsatnume];
 };
 
 
 
-//µ¼º½µçÎÄ¹Û²âÊı¾İ½á¹¹Ìå
-/*******µ¼º½µçÎÄÍ·ÎÄ¼ş***********/
+//å¯¼èˆªç”µæ–‡è§‚æµ‹æ•°æ®ç»“æ„ä½“
+/*******å¯¼èˆªç”µæ–‡å¤´æ–‡ä»¶***********/
 struct GPSNavHdr
 {
-	double RINEX_version;    //RINEX°æ±¾
-	char RINEX_type;         //ÎÄ¼şÀàĞÍ
-	double ion_alpha[4], ion_beta[4]; //µçÀë²ã²ÎÊı
-	double utc_a0, utc_a1;   //ÓÃÓÚ¼ÆËãUTCÊ±¼äµÄÀúÊé²ÎÊı
-	int utc_t, utc_w;       //ÓÃÓÚ¼ÆËãUTCÊ±¼äµÄÀúÊé²ÎÊı
-	int leap_sec;           //ÌøÃëÊı
-	int nheader_len, nrec_len;    //ÎÄ¼şÍ·ĞĞÊı£¬Êı¾İĞĞÊı
+	double RINEX_version;    //RINEXç‰ˆæœ¬
+	char RINEX_type;         //æ–‡ä»¶ç±»å‹
+	double ion_alpha[4], ion_beta[4]; //ç”µç¦»å±‚å‚æ•°
+	double utc_a0, utc_a1;   //ç”¨äºè®¡ç®—UTCæ—¶é—´çš„å†ä¹¦å‚æ•°
+	int utc_t, utc_w;       //ç”¨äºè®¡ç®—UTCæ—¶é—´çš„å†ä¹¦å‚æ•°
+	int leap_sec;           //è·³ç§’æ•°
+	int nheader_len, nrec_len;    //æ–‡ä»¶å¤´è¡Œæ•°ï¼Œæ•°æ®è¡Œæ•°
 };
 
-/******µ¼º½µçÎÄ¼ÇÂ¼*************/
+/******å¯¼èˆªç”µæ–‡è®°å½•*************/
 struct  NavRecord
 {
-	char PRN[3];   //ÎÀĞÇµÄPRNºÅ
-	//µÚÒ»ĞĞ
-	CalendarTime CalendarTime_0;   //ÈÕÀúÊ±
-	GPSTime TOC;       //ÎÀĞÇÖÓµÄ²Î¿¼Ê±¼ä
-	double SClockBias;//ÎÀĞÇÖÓµÄÆ«²î(s)
-	double SClockDri;//ÎÀĞÇÖÓµÄÆ¯ÒÆ(s/s)
-	double SClockDriV;//ÎÀĞÇÖÓµÄÆ¯ÒÆËÙ¶È(s/s^2)
-	//µÚ¶şĞĞ
-	double IODE;//Êı¾İ¡¢ĞÇÀú·¢²¼Ê±¼ä
+	char PRN[3];   //å«æ˜Ÿçš„PRNå·
+	//ç¬¬ä¸€è¡Œ
+	CalendarTime CalendarTime_0;   //æ—¥å†æ—¶
+	GPSTime TOC;       //å«æ˜Ÿé’Ÿçš„å‚è€ƒæ—¶é—´
+	double SClockBias;//å«æ˜Ÿé’Ÿçš„åå·®(s)
+	double SClockDri;//å«æ˜Ÿé’Ÿçš„æ¼‚ç§»(s/s)
+	double SClockDriV;//å«æ˜Ÿé’Ÿçš„æ¼‚ç§»é€Ÿåº¦(s/s^2)
+	//ç¬¬äºŒè¡Œ
+	double IODE;//æ•°æ®ã€æ˜Ÿå†å‘å¸ƒæ—¶é—´
 	double Crs;//(m)
 	double deltan;//(rad/s)
 	double M0;//(rad)
-	//µÚÈıĞĞ
+	//ç¬¬ä¸‰è¡Œ
 	double Cuc;//(rad)
-	double e;//¹ìµÀÆ«ĞÄÂÊ
+	double e;//è½¨é“åå¿ƒç‡
 	double Cus;//(rad)
 	double sqrtA;//(m^0.5)
-	//µÚËÄĞĞ
-	GPSTime TOE;//ĞÇÀúµÄ²Î¿¼Ê±¿Ì£¨GPSÖÜÄÚµÄÃëÊı£©
+	//ç¬¬å››è¡Œ
+	GPSTime TOE;//æ˜Ÿå†çš„å‚è€ƒæ—¶åˆ»ï¼ˆGPSå‘¨å†…çš„ç§’æ•°ï¼‰
 	double Cic;//(rad)
 	double omega;//(rad)
 	double Cis;//(rad)
-	//µÚÎåĞĞ
+	//ç¬¬äº”è¡Œ
 	double i0;//(rad)
 	double Crc;//(m)
 	double omega1;//(rad)
 	double dOmega;//(rad/s)
-	//µÚÁùĞĞ
+	//ç¬¬å…­è¡Œ
 	double di;
 	double l2_code;
-	double wn;//GPSÖÜÊı£¨ÓëTOEÒ»Í¬±íÊ¾Ê±¼ä£©
+	double wn;//GPSå‘¨æ•°ï¼ˆä¸TOEä¸€åŒè¡¨ç¤ºæ—¶é—´ï¼‰
 	double l2_P_tag;
-	//µÚÆßĞĞ
-	double SatAccur;//ÎÀĞÇ¾«¶È(m)
-	double SatState;//ÎÀĞÇ½¡¿µ×´Ì¬
+	//ç¬¬ä¸ƒè¡Œ
+	double SatAccur;//å«æ˜Ÿç²¾åº¦(m)
+	double SatState;//å«æ˜Ÿå¥åº·çŠ¶æ€
 	double TGD;//(sec)
-	double IODC;//ÖÓµÄÊı¾İÁäÆÚ
-	//µÚ°ËĞĞ
-	double SendTime;//µçÎÄ·¢ËÍÊ±¿Ì£¨µ¥Î»ÎªGPSÖÜµÄÃë£¬Í¨¹ı½»½Ó×Ö£¨HOW£©ÖĞµÄZ¼ÆÊıµÃ³ö£©
+	double IODC;//é’Ÿçš„æ•°æ®é¾„æœŸ
+	//ç¬¬å…«è¡Œ
+	double SendTime;//ç”µæ–‡å‘é€æ—¶åˆ»ï¼ˆå•ä½ä¸ºGPSå‘¨çš„ç§’ï¼Œé€šè¿‡äº¤æ¥å­—ï¼ˆHOWï¼‰ä¸­çš„Zè®¡æ•°å¾—å‡ºï¼‰
 	double FitRange;
 	double spare1;
 	double spare2;
 };
 
-/***********ÎÀĞÇÎ»ÖÃ¼ÆËãÊı¾İ****************/
+/***********å«æ˜Ÿä½ç½®è®¡ç®—æ•°æ®****************/
 //struct SatInfo
 //{
-//	Cartesian SatPos;//ÎÀĞÇÎ»ÖÃ
+//	Cartesian SatPos;//å«æ˜Ÿä½ç½®
 //	
-//	double delta_t;//ÖÓ²î
+//	double delta_t;//é’Ÿå·®
 //};
 
-//¶ÔÁ÷²ãÑÓ³Ù¸ÄÕı
-/*******¶ÔÁ÷²ãÊı¾İ*********/
+//å¯¹æµå±‚å»¶è¿Ÿæ”¹æ­£
+/*******å¯¹æµå±‚æ•°æ®*********/
 struct meteodata
 {
-	double temp;//ÎÂ¶È£¨K£©
-	double pres;//Ñ¹Ç¿£¨hpa£©
+	double temp;//æ¸©åº¦ï¼ˆKï¼‰
+	double pres;//å‹å¼ºï¼ˆhpaï¼‰
 	double RH;
-	double height;//¸ß¶È£¨km£©
+	double height;//é«˜åº¦ï¼ˆkmï¼‰
 };
 
-//Æ½²î·½°¸
+//å¹³å·®æ–¹æ¡ˆ
 struct  Adjust_Scheme
 {
     int mode;                 //positioning model : 0 SPP 1 Static_PPP 2 Dynamic_PPP
     
-    double cut_off_angle;     // ½ØÖ¹¸ß¶È½Ç
-	int trop_corr_mode;       // ¶ÔÁ÷²ã¸ÄÕıÑ¡Ïî
-	int ion_corr_mode;        // µçÀë²ã¸ÄÕıÑ¡Ïî 0 ²»¸ÄÕı 1 ¼ò»¯¸ÄÕıÄ£ĞÍ 2 SAASÄ£ĞÍ 3 ZTDÄ£ĞÍ 4 ZTD+Grad Ä£ĞÍ
-    int niter;                // ÂË²¨µü´ú´ÎÊı
+    double cut_off_angle;     // æˆªæ­¢é«˜åº¦è§’
+	int trop_corr_mode;       // å¯¹æµå±‚æ”¹æ­£é€‰é¡¹
+	int ion_corr_mode;        // ç”µç¦»å±‚æ”¹æ­£é€‰é¡¹ 0 ä¸æ”¹æ­£ 1 ç®€åŒ–æ”¹æ­£æ¨¡å‹ 2 SAASæ¨¡å‹ 3 ZTDæ¨¡å‹ 4 ZTD+Grad æ¨¡å‹
+    int niter;                // æ»¤æ³¢è¿­ä»£æ¬¡æ•°
     
-    double thresslip = 0.5;         // ÎŞ¼¸ºÎ¾àÀë×éºÏÖÜÌøÌ½²âãĞÖµ
+    double thresslip = 0.5;         // æ— å‡ ä½•è·ç¦»ç»„åˆå‘¨è·³æ¢æµ‹é˜ˆå€¼
 };
 
-//ÎÀĞÇĞÅÏ¢ºÍ½ÓÊÕ»úĞÅÏ¢½á¹¹Ìå
-/*******ÎÀĞÇĞÅÏ¢********/
+//å«æ˜Ÿä¿¡æ¯å’Œæ¥æ”¶æœºä¿¡æ¯ç»“æ„ä½“
+/*******å«æ˜Ÿä¿¡æ¯********/
 struct  SatInfo
 {
-	string prn;  //ÎÀĞÇµÄPRNºÅ
-	GPSTime t;   //ËùÔÚµÄÊ±¿Ì
-	Cartesian pos;  //¸ÃÊ±¿ÌÎÀĞÇµÄÎ»ÖÃ
+	string prn;  //å«æ˜Ÿçš„PRNå·
+	GPSTime t;   //æ‰€åœ¨çš„æ—¶åˆ»
+	Cartesian pos;  //è¯¥æ—¶åˆ»å«æ˜Ÿçš„ä½ç½®
     Cartesian velocity; //
-	double delta_t;  //ÎÀĞÇµÄ¸ÄÕıºóÖÓ²î£¨£¿£©
+	double delta_t;  //å«æ˜Ÿçš„æ”¹æ­£åé’Ÿå·®ï¼ˆï¼Ÿï¼‰
     double drift;
     double var;
     bool flag;
 };
 
-/*******µ¥µã¶¨Î»µÃµ½µÄ½ÓÊÕ»úĞÅÏ¢*******/
+/*******å•ç‚¹å®šä½å¾—åˆ°çš„æ¥æ”¶æœºä¿¡æ¯*******/
 struct ssat_t
 {
-    int slip[2] ;    //ÖÜÌø±êÊ¶ 1 ÓĞÖÜÌø
-    double azel[2]; //±íÊ¾·½Î»½Ç/Ñö½Ç {az,el} (rad)
+    int slip[2] ;    //å‘¨è·³æ ‡è¯† 1 æœ‰å‘¨è·³
+    double azel[2]; //è¡¨ç¤ºæ–¹ä½è§’/ä»°è§’ {az,el} (rad)
     
-    double gf;    //ÎŞ×éºÏ¾àÀë
+    double gf;    //æ— ç»„åˆè·ç¦»
     double phw;
     bool vs;    //valid of satllite 
 };
 
 struct RcvInfo
 {
-	GPSTime rcvtime; //½ÓÊÕÊ±¿Ì
-	Cartesian pos;   //½ÓÊÕ»úÎ»ÖÃµÄµÑ¿¨¶û×ø±êÏµ
-    Cartesian velocity; //½ÓÊÕ»úËÙ¶ÈµÑ¿¨¶û×ø±êÏµ
-    Topocentric diff; //¼ÆËãµÃµ½µÄ½ÓÊÕ»úÎ»ÖÃÓë¹Û²âÎÄ¼ş¸ø³öµÄ½üËÆÎ»ÖÃµÄ²î
-	double delta_t;  //½ÓÊÕ»úÖÓ²î
+	GPSTime rcvtime; //æ¥æ”¶æ—¶åˆ»
+	Cartesian pos;   //æ¥æ”¶æœºä½ç½®çš„ç¬›å¡å°”åæ ‡ç³»
+    Cartesian velocity; //æ¥æ”¶æœºé€Ÿåº¦ç¬›å¡å°”åæ ‡ç³»
+    Topocentric diff; //è®¡ç®—å¾—åˆ°çš„æ¥æ”¶æœºä½ç½®ä¸è§‚æµ‹æ–‡ä»¶ç»™å‡ºçš„è¿‘ä¼¼ä½ç½®çš„å·®
+	double delta_t;  //æ¥æ”¶æœºé’Ÿå·®
     double clock_drift;
-	int validSatNum; //ÓĞĞ§ÎÀĞÇÊı
+	int validSatNum; //æœ‰æ•ˆå«æ˜Ÿæ•°
 	double sigma0;
 	double  GDOP;
 	double  PDOP;
@@ -401,9 +401,9 @@ struct RcvInfo
 	double  HDOP;
     double  VDOP;
     int  nx;
-    double  x[50] = {0.0};       //¸¡µã½âµÄ×´Ì¬ÏòÁ¿
-    double  P[50][50] = {0.0};   // ×´Ì¬ÏòÁ¿µÄ·½²î
-    double tt;  //¾àÀëÉÏ¸öÊ±¿ÌµÄÊ±¼ä²î
+    double  x[50] = {0.0};       //æµ®ç‚¹è§£çš„çŠ¶æ€å‘é‡
+    double  P[50][50] = {0.0};   // çŠ¶æ€å‘é‡çš„æ–¹å·®
+    double tt;  //è·ç¦»ä¸Šä¸ªæ—¶åˆ»çš„æ—¶é—´å·®
     ssat_t ssat[MAXGPS] = {{0}};
     Adjust_Scheme opt;
 };

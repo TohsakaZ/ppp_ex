@@ -1,20 +1,20 @@
 /************************************************************************
 Beta1.0
-   ĞŞ¸ÄÊ±¼ä£º2017.7.17
-   ĞŞ¸ÄÄÚÈİ£º1£©Íê³ÉÁËNavFileÀàµÄ¶¨Òå¡£
+   ä¿®æ”¹æ—¶é—´ï¼š2017.7.17
+   ä¿®æ”¹å†…å®¹ï¼š1ï¼‰å®Œæˆäº†NavFileç±»çš„å®šä¹‰ã€‚
    
 Beta1.1
-   ĞŞ¸ÄÊ±¼ä£º2017.7.18
-   ĞŞ¸ÄÄÚÈİ£º1£©ĞŞ¸ÄÁË¶ÔÓ¦µÄcppÎÄ¼ş¡£
+   ä¿®æ”¹æ—¶é—´ï¼š2017.7.18
+   ä¿®æ”¹å†…å®¹ï¼š1ï¼‰ä¿®æ”¹äº†å¯¹åº”çš„cppæ–‡ä»¶ã€‚
 
 Beta1.11
-   ĞŞ¸ÄÊ±¼ä£º2017.7.18
-   ĞŞ¸ÄÄÚÈİ£º1£©ĞŞ¸ÄÁË±äÁ¿Ãû¡£
-            2£©Ôö¼ÓÁËconst¡£
+   ä¿®æ”¹æ—¶é—´ï¼š2017.7.18
+   ä¿®æ”¹å†…å®¹ï¼š1ï¼‰ä¿®æ”¹äº†å˜é‡åã€‚
+            2ï¼‰å¢åŠ äº†constã€‚
 
 Beta1.2
-   ĞŞ¸ÄÊ±¼ä£º
-   ĞŞ¸ÄÄÚÈİ£º1£©¼ÇÂ¼¸ÄÎªÓÃmapµÄ·½Ê½´æ´¢ ·½±ãºóĞøµÄ²éÕÒ
+   ä¿®æ”¹æ—¶é—´ï¼š
+   ä¿®æ”¹å†…å®¹ï¼š1ï¼‰è®°å½•æ”¹ä¸ºç”¨mapçš„æ–¹å¼å­˜å‚¨ æ–¹ä¾¿åç»­çš„æŸ¥æ‰¾
 
 
 *************************************************************************************/
@@ -34,21 +34,21 @@ class NavFile
 {
 public:
 	NavFile();
-	NavFile(const string &name); //name±íÊ¾µ¼º½µçÎÄÎÄ¼şÃû
+	NavFile(const string &name); //nameè¡¨ç¤ºå¯¼èˆªç”µæ–‡æ–‡ä»¶å
 	~NavFile();
 
 private:
-	string _filename; //µ¼º½µçÎÄÎÄ¼şÃû
-	map<string ,map<GPSTime,NavRecord>> _data;  //µ¼º½µçÎÄÊı¾İ¼ÇÂ¼
-	GPSNavHdr _header;  //µ¼º½µçÎÄÍ·ÎÄ¼ş
+	string _filename; //å¯¼èˆªç”µæ–‡æ–‡ä»¶å
+	map<string ,map<GPSTime,NavRecord>> _data;  //å¯¼èˆªç”µæ–‡æ•°æ®è®°å½•
+	GPSNavHdr _header;  //å¯¼èˆªç”µæ–‡å¤´æ–‡ä»¶
 
 public:
-	bool ReadFile(const string &name); //¶ÁÈ¡µ¼º½µçÎÄÎÄ¼ş
-	//const NavRecord & Data(int num);  //È¡³öÒ»Ìõ¼ÇÂ¼
-	int getDataNum() const;  //µÃµ½¼ÇÂ¼ÌõÊı
-	string FileName() const;  //»ñÈ¡µ¼º½µçÎÄÎÄ¼şÃû
-	NavRecord GetRecord(GPSTime t, string prn) const;  //¸ù¾İÏàÓ¦µÄ·¢ÉäÊ±¿ÌÒÔ¼°PRNºÅ»ñÈ¡ÏàÓ¦µÄµ¼º½µçÎÄµÄ¼ÇÂ¼
-	static GPSTime TimeChange(GPSTime t);    //Ê±¼ä×ª»»º¯Êı
+	bool ReadFile(const string &name); //è¯»å–å¯¼èˆªç”µæ–‡æ–‡ä»¶
+	//const NavRecord & Data(int num);  //å–å‡ºä¸€æ¡è®°å½•
+	int getDataNum() const;  //å¾—åˆ°è®°å½•æ¡æ•°
+	string FileName() const;  //è·å–å¯¼èˆªç”µæ–‡æ–‡ä»¶å
+	NavRecord GetRecord(GPSTime t, string prn) const;  //æ ¹æ®ç›¸åº”çš„å‘å°„æ—¶åˆ»ä»¥åŠPRNå·è·å–ç›¸åº”çš„å¯¼èˆªç”µæ–‡çš„è®°å½•
+	static GPSTime TimeChange(GPSTime t);    //æ—¶é—´è½¬æ¢å‡½æ•°
     static string num_std(string s)
     {
         std::size_t found = s.find('D');

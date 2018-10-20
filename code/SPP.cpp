@@ -1,5 +1,5 @@
-//Ôö¼Ó¼ÆËã½ÓÊÕ»úËÙ¶ÈµÄ¶¯ÄÜ
-//        ĞŞ¸ÄÊ±¼ä2018.04.03
+//å¢åŠ è®¡ç®—æ¥æ”¶æœºé€Ÿåº¦çš„åŠ¨èƒ½
+//        ä¿®æ”¹æ—¶é—´2018.04.03
 
 #include "SPP.h"
 
@@ -121,34 +121,34 @@ void SPP::pppos(RcvInfo &info, const ObsRecord &oRec, const NavFile &nav)
     CMatrix xp,Pp,H,v,R;
     Adjust_Scheme opt = info.opt;
     SatInfo sat[oRec.sat_num];
-    int iter =1 ,nv ; //ÂË²¨µü´ú´ÎÊı
+    int iter =1 ,nv ; //æ»¤æ³¢è¿­ä»£æ¬¡æ•°
     
     udstate_ppp(info, oRec, nav);
     
     Satposs(oRec, nav, sat);
     
-    //·ÖÅä¾ØÕó
+    //åˆ†é…çŸ©é˜µ
     xp = CMatrix(info.nx,1);  Pp = CMatrix(info.nx,info.nx);
     for (int i = 0;i<info.nx;i++) xp.Set_number(i, 0, info.x[i]);
-    nv = oRec.sat_num * 2; //¹Û²âÖµ¸öÊı
+    nv = oRec.sat_num * 2; //è§‚æµ‹å€¼ä¸ªæ•°
     v =  CMatrix(nv,1); H = CMatrix(nv,info.nx); R =CMatrix(nv,nv);
     
     for (int i= 0;i < iter;i++){
-        //¼ÆËã²Ğ²î ¸üĞÂÉè¼Æ¾ØÕó
+        //è®¡ç®—æ®‹å·® æ›´æ–°è®¾è®¡çŸ©é˜µ
         if (!(nv = Resppp(oRec, nav,sat, info, xp, H, v, R))) break;
         
         for (int j = 0;j<info.nx;j++)
             for (int k =0;k<info.nx;k++)
                 Pp.Set_number(j, k, info.P[j][k]);
         
-        // ¾ØÕó¼ÆËã
+        // çŸ©é˜µè®¡ç®—
         if (!filter(oRec,info, xp, Pp, H, v, R, info.nx,nv)) break;
 
 //        for (int j = 0;j<info.nx;j++) {
 //            info.x[j] = xp[j][0];}
     }
     
-    //¸üĞÂ½á¹û
+    //æ›´æ–°ç»“æœ
     for (int i = 0;i<info.nx;i++) {
         info.x[i] = xp[i][0];
         for (int j =0;j<info.nx;j++)
@@ -157,7 +157,7 @@ void SPP::pppos(RcvInfo &info, const ObsRecord &oRec, const NavFile &nav)
     
     info.pos.X = info.x[0]; info.pos.Y = info.x[1]; info.pos.Z = info.x[2];
     info.validSatNum = nv/2;
-    //´æ´¢¾«¶ÈĞÅÏ¢µÄ
+    //å­˜å‚¨ç²¾åº¦ä¿¡æ¯çš„
     
 }
 
@@ -169,7 +169,7 @@ filter(const ObsRecord &oRec,const RcvInfo &info, CMatrix &x, CMatrix &P, CMatri
     int prn;
     CMatrix x_,Pp_,H_,xp_,P_;
     
-    //»ñÈ¡ÆäÖĞĞèÒª¼ÆËãµÄ
+    //è·å–å…¶ä¸­éœ€è¦è®¡ç®—çš„
     for (i = k=0; i<n;i++) if (x[i][0]!= 0.0  && P[i][i] > 0.0) ix[k++] = i;
 //    for (k = 0;k<4;k++)
 //        ix[k] = k;
@@ -257,7 +257,7 @@ void SPP::udstate_ppp(RcvInfo &info, const ObsRecord &oRec, const NavFile &nav)
 }
 void SPP::udpos_ppp(RcvInfo &info)
 {
-    //Èç¹ûÊÇµÚÒ»¸öÊ±¿Ì ÔòÖ±½Ó³õÊ¼»¯ÎªSPP½á¹û
+    //å¦‚æœæ˜¯ç¬¬ä¸€ä¸ªæ—¶åˆ» åˆ™ç›´æ¥åˆå§‹åŒ–ä¸ºSPPç»“æœ
     if (info.x[0] == 0.0)
     {
         initx(info, info.pos.X, VAR_POS, 0);
@@ -302,9 +302,9 @@ void SPP::udbias_ppp(RcvInfo &info, const ObsRecord &oRec, const NavFile &nav)
     
     pos = CoordTrans::Cart2Geod(info.pos);
     
-    /*  Ê×ÏÈÀûÓÃÎ±¾à·½³ÌÓëÔØ²¨ÏàÎ»·¿²úµÈÖ®²îÈ·¶¨Ä£ºı¶È³õÖµ  ¼´bias
-        È»ºóÍ³¼ÆËùÓĞÃ»ÓĞ·¢ÉúÖÜÌøµÄÎÀĞÇ bias ÓëÇ°Ò»Ê±¿ÌÄ£ºı¶ÈÖ®²î ¼´offset
-        È»ºó½«È¡¾ùÖµ ¼Óµ½ÉÏÒ»Ê±¿ÌµÄÄ£ºı¶È¹À¼ÆÁ¿ÖĞ
+    /*  é¦–å…ˆåˆ©ç”¨ä¼ªè·æ–¹ç¨‹ä¸è½½æ³¢ç›¸ä½æˆ¿äº§ç­‰ä¹‹å·®ç¡®å®šæ¨¡ç³Šåº¦åˆå€¼  å³bias
+        ç„¶åç»Ÿè®¡æ‰€æœ‰æ²¡æœ‰å‘ç”Ÿå‘¨è·³çš„å«æ˜Ÿ bias ä¸å‰ä¸€æ—¶åˆ»æ¨¡ç³Šåº¦ä¹‹å·® å³offset
+        ç„¶åå°†å–å‡å€¼ åŠ åˆ°ä¸Šä¸€æ—¶åˆ»çš„æ¨¡ç³Šåº¦ä¼°è®¡é‡ä¸­
      */
     for (i = k =0; i<oRec.sat_num ; i++)
     {
@@ -330,11 +330,11 @@ void SPP::udbias_ppp(RcvInfo &info, const ObsRecord &oRec, const NavFile &nav)
         prn = prn2num(oRec.obsdata[i]);
         if (!prn) continue;
         j = IB(prn,info.opt);
-        //ÓĞÎÊÌâ
+        //æœ‰é—®é¢˜
         // info.P[j][j] += SQR(0.0001*fabs(info.tt));
-        //Èç¹û Ã»ÓĞ·¢ÉúÖÜÌø ¾ÍÈÏÎªÏÂÒ»Ê±¿ÌµÄÖÜÌøµÈÓÚÉÏÒ»Ê±¿ÌµÄÖÜÌø
+        //å¦‚æœ æ²¡æœ‰å‘ç”Ÿå‘¨è·³ å°±è®¤ä¸ºä¸‹ä¸€æ—¶åˆ»çš„å‘¨è·³ç­‰äºä¸Šä¸€æ—¶åˆ»çš„å‘¨è·³
         if (info.x[j] !=0.0 && !info.ssat[prn].slip[0] && !info.ssat[prn].slip[1] ) continue;
-        //Èç¹û·¢ÉúÁËÖÜÌø ¾ÍÖØĞÂÎªÖÜÌø¸³³õÖµ
+        //å¦‚æœå‘ç”Ÿäº†å‘¨è·³ å°±é‡æ–°ä¸ºå‘¨è·³èµ‹åˆå€¼
         //if (bias[i] == 0) continue;
         initx(info, bias[i], VAR_BIAS, j);
     }
@@ -380,7 +380,7 @@ int SPP::corrmeas(const GPSTime &time, const GpsObservation &obs,const NavFile &
     L1 = obs.L[0]*lamda0;
     P1 = obs.P[0];
     
-    //ÕâÀïÓ¦¸ÃÓĞÏàÓ¦µÄµçÀë²ã ¸ÄÕı
+    //è¿™é‡Œåº”è¯¥æœ‰ç›¸åº”çš„ç”µç¦»å±‚ æ”¹æ­£
 //    ion = Correction::ionKlobuchar(nav.Header().ion_alpha, nav.Header().ion_beta,time.tow.sn , X1, X2);
 //    vari = SQR(ion*ERR_BRDCI);
     ion = 0.0;
@@ -391,7 +391,7 @@ int SPP::corrmeas(const GPSTime &time, const GpsObservation &obs,const NavFile &
     meas[1] = P1 - ion;
     var[0] = vari;
     var[1] = vari+SQR(ERR_CBIAS);
-    //¶ÔÎÀĞÇºÍ½ÓÊÕ»úÌìÏßÏàÎ»ÖĞĞÄ½øĞĞ¸ÄÕı
+    //å¯¹å«æ˜Ÿå’Œæ¥æ”¶æœºå¤©çº¿ç›¸ä½ä¸­å¿ƒè¿›è¡Œæ”¹æ­£
     for (int i = 0;i < 2; i++)
     {
         if (dants) meas[i] -=dants[0];
@@ -443,10 +443,10 @@ double SPP::Prange(const GPSTime &time, const GpsObservation &obs, const NavFile
     //get_TGD
     if (info.ion_corr_mode == 3 && fabs(P1) > 0.0 && fabs(P2) >0.0 )
     {
-        //ÎŞµçÀë²ã×éºÏ¸ÄÕıÄ£ĞÍ
+        //æ— ç”µç¦»å±‚ç»„åˆæ”¹æ­£æ¨¡å‹
         PC = (gamma*P1-P2) / (gamma-1.0);
     }
-    else //²ÉÓÃµ¥ÆµÎ±¾àÄ£ĞÍ
+    else //é‡‡ç”¨å•é¢‘ä¼ªè·æ¨¡å‹
     {
         PC = P1 -P1_P2;
     }
@@ -458,11 +458,11 @@ double SPP::Prange(const GPSTime &time, const GpsObservation &obs, const NavFile
 
 SatInfo SPP::Cal_SatInfo(const NavRecord & record, GPSTime t)
 {
-	//NavRecord record = nav.GetRecord(t, prn);//»ñÈ¡Ä³Ò»Ê±¿Ì¸ÃÎÀĞÇµÄĞÇÀú¼ÇÂ¼
+	//NavRecord record = nav.GetRecord(t, prn);//è·å–æŸä¸€æ—¶åˆ»è¯¥å«æ˜Ÿçš„æ˜Ÿå†è®°å½•
 	SatInfo sat;
-	double a = record.sqrtA*record.sqrtA;//³¤°ëÖáa
-	double n0 = sqrt(GM / a / a / a);//¼ÆËãÎÀĞÇÔË¶¯µÄÆ½¾ù½ÇËÙ¶Èn0
-	double n = n0 + record.deltan;//Æ½¾ù½ÇËÙ¶È¸ÄÕıºóµÄÖµ
+	double a = record.sqrtA*record.sqrtA;//é•¿åŠè½´a
+	double n0 = sqrt(GM / a / a / a);//è®¡ç®—å«æ˜Ÿè¿åŠ¨çš„å¹³å‡è§’é€Ÿåº¦n0
+	double n = n0 + record.deltan;//å¹³å‡è§’é€Ÿåº¦æ”¹æ­£åçš„å€¼
 	double tk = (t.tow.sn + t.tow.tos) - (record.TOE.tow.sn + record.TOE.tow.tos);//
 	if (tk>302400)
 	{
@@ -477,9 +477,9 @@ SatInfo SPP::Cal_SatInfo(const NavRecord & record, GPSTime t)
 		tk = tk;
 	}
 
-	double Mk = record.M0 + n*tk;//¼ÆËã¹Û²âÊ±¿ÌÆ½½üµã½ÇM rad
+	double Mk = record.M0 + n*tk;//è®¡ç®—è§‚æµ‹æ—¶åˆ»å¹³è¿‘ç‚¹è§’M rad
 
-	double Ek = 0;//¼ÆËã¹Û²âÊ±¿ÌÆ«½üµã½ÇEk rad
+	double Ek = 0;//è®¡ç®—è§‚æµ‹æ—¶åˆ»åè¿‘ç‚¹è§’Ek rad
 	double _E , E1 ;
     double sinE;
 //    while (_E>1e-12)
@@ -493,27 +493,27 @@ SatInfo SPP::Cal_SatInfo(const NavRecord & record, GPSTime t)
         Ek = E1; sinE = sin(Ek); E1 = Mk +record.e *sinE;
     }
 
-	/************¼ÆËãÎÀĞÇÎ»ÖÃ*****************************************************/
-	double f = atan2(sqrt(1 - record.e*record.e)*sin(Ek) / (1 - record.e*cos(Ek)), (cos(Ek) - record.e) / (1 - record.e*cos(Ek)));//Õæ½üµã½Çf
-	double u = record.omega1 + f;//Éı½»½Ç¾à u rad
+	/************è®¡ç®—å«æ˜Ÿä½ç½®*****************************************************/
+	double f = atan2(sqrt(1 - record.e*record.e)*sin(Ek) / (1 - record.e*cos(Ek)), (cos(Ek) - record.e) / (1 - record.e*cos(Ek)));//çœŸè¿‘ç‚¹è§’f
+	double u = record.omega1 + f;//å‡äº¤è§’è· u rad
 
-								 //½øĞĞÉã¶¯¸ÄÕı
+								 //è¿›è¡Œæ‘„åŠ¨æ”¹æ­£
 
-	double _u = record.Cus*sin(2 * u) + record.Cuc*cos(2 * u);//Éı½»½Ç¾àµÄ¸ÄÕıÊı
-	double _r = record.Crs*sin(2 * u) + record.Crc*cos(2 * u);//Ïò¾¶µÄ¸ÄÕıÊı
-	double _i = record.Cis*sin(2 * u) + record.Cic*cos(2 * u);// ¹ìµÀÇã½Ç¸ÄÕıÊı
+	double _u = record.Cus*sin(2 * u) + record.Cuc*cos(2 * u);//å‡äº¤è§’è·çš„æ”¹æ­£æ•°
+	double _r = record.Crs*sin(2 * u) + record.Crc*cos(2 * u);//å‘å¾„çš„æ”¹æ­£æ•°
+	double _i = record.Cis*sin(2 * u) + record.Cic*cos(2 * u);// è½¨é“å€¾è§’æ”¹æ­£æ•°
 	u = u + _u;
 	double R = a*(1 - record.e*cos(Ek)) + _r;
 	double i = record.i0 + _i + record.di*tk;
 
-	//¼ÆËãÎÀĞÇÔÚ¹ìµÀÃæ×ø±êÏµÖĞµÄÎ»ÖÃ
+	//è®¡ç®—å«æ˜Ÿåœ¨è½¨é“é¢åæ ‡ç³»ä¸­çš„ä½ç½®
 	double x = R*cos(u);
 	double y = R*sin(u);
 
-	//¼ÆËã¹Û²âË²¼äÉı½»µãµÄ¾­¶È
+	//è®¡ç®—è§‚æµ‹ç¬é—´å‡äº¤ç‚¹çš„ç»åº¦
 	double L = record.omega + (record.dOmega - omega_e)*tk - omega_e*(record.TOE.tow.sn + record.TOE.tow.tos);
 
-	//¼ÆËãÎÀĞÇÔÚË²Ê±µØÇò×ø±êÏµÖĞµÄÎ»ÖÃ
+	//è®¡ç®—å«æ˜Ÿåœ¨ç¬æ—¶åœ°çƒåæ ‡ç³»ä¸­çš„ä½ç½®
 	sat.pos.X = x*cos(L) - y*cos(i)*sin(L);
 	sat.pos.Y = x*sin(L) + y*cos(i)*cos(L);
 	sat.pos.Z = y*sin(i);
@@ -521,7 +521,7 @@ SatInfo SPP::Cal_SatInfo(const NavRecord & record, GPSTime t)
     sat.delta_t = record.SClockBias + record.SClockDri*tk + record.SClockDriV*tk*tk;
     sat.delta_t -= 2.0 * sqrt(GM)*record.sqrtA*sin(Ek)*record.e/SQR(c);
     
-    //¼ÆËãÎÀĞÇĞÇÀúÎó²î
+    //è®¡ç®—å«æ˜Ÿæ˜Ÿå†è¯¯å·®
     if (record.SatAccur<0 || record.SatAccur>15)
         sat.var = 6144.0;
     else
@@ -555,10 +555,10 @@ int SPP::Satposs( const ObsRecord &oRec, const NavFile &nav,SatInfo sat[])
             continue;
         }
     
-        //È·¶¨³õ´ÎÎÀĞÇÊ±¿Ì
+        //ç¡®å®šåˆæ¬¡å«æ˜Ÿæ—¶åˆ»
         time = time + (-P / c);
     
-        //¼ÆËã³õ´ÎÎÀĞÇÖÓ²î
+        //è®¡ç®—åˆæ¬¡å«æ˜Ÿé’Ÿå·®
         nRec  =  nav.GetRecord(time, prn);
         if (nRec.PRN[0]=='\0')
         {
@@ -585,18 +585,18 @@ int SPP::Satposs( const ObsRecord &oRec, const NavFile &nav,SatInfo sat[])
         }
         dts = nRec.SClockBias + nRec.SClockDri*t + nRec.SClockDriV*t*t;
     
-        // È·¶¨×îÖÕ·¢ÉäÊ±¼ä²¢¼ÆËãÎÀĞÇÎ»ÖÃ¼°ÖÓ²î
+        // ç¡®å®šæœ€ç»ˆå‘å°„æ—¶é—´å¹¶è®¡ç®—å«æ˜Ÿä½ç½®åŠé’Ÿå·®
         time = time +(-dts);
         nRec = nav.GetRecord(time,prn);
         sat[i] = SPP::Cal_SatInfo(nRec, time);
         sat[i].pos = Correction::EarthRotatCorr( P/c +dts, sat[i].pos);
         
-        //¼ÆËã1E-3ÃëºóÎÀĞÇÎ»ÖÃ ÓÃÓÚ¼ÆËãÎÀĞÇËÙ¶È
+        //è®¡ç®—1E-3ç§’åå«æ˜Ÿä½ç½® ç”¨äºè®¡ç®—å«æ˜Ÿé€Ÿåº¦
         
         time  = time + tt;
         sat_test = SPP::Cal_SatInfo(nRec, time);
         sat_test.pos = Correction::EarthRotatCorr(P/c + dts -tt, sat_test.pos);
-        //¼ÆËãÎÀĞÇËÙ¶È
+        //è®¡ç®—å«æ˜Ÿé€Ÿåº¦
         sat[i].velocity.X = (sat_test.pos.X - sat[i].pos.X) /tt;
         sat[i].velocity.Y = (sat_test.pos.Y - sat[i].pos.Y) /tt;
         sat[i].velocity.Z = (sat_test.pos.Z - sat[i].pos.Z) /tt;
@@ -627,7 +627,7 @@ int SPP::Rescode(const ObsRecord &oRec, const NavFile &nav, SatInfo *sat, Cartes
         GPSTime time = oRec.obstime + (-P / c) ;
         
         Topopolar sat_tp;
-        //ÅĞ¶Ï¸ß¶È½Ç
+        //åˆ¤æ–­é«˜åº¦è§’
         if (pos.X != 0.0){
             sat_tp = CoordTrans::Topo2Topop(CoordTrans::Cart2Topo(pos, sat[i].pos));
             if (sat_tp.E <= scheme.cut_off_angle)  continue;
@@ -694,7 +694,7 @@ int SPP::Rescode(const ObsRecord &oRec, const NavFile &nav, SatInfo *sat, Cartes
     
     if (valid_sat_num < 4 )
     {
-       // log << "ÓĞĞ§ÎÀĞÇÊıĞ¡ÓÚ»òµÈÓÚ4£¬µ¥µã¶¨Î»Ê§°Ü¡£"<<endl;
+       // log << "æœ‰æ•ˆå«æ˜Ÿæ•°å°äºæˆ–ç­‰äº4ï¼Œå•ç‚¹å®šä½å¤±è´¥ã€‚"<<endl;
         return 0;
     }
     else return valid_sat_num;
@@ -704,11 +704,11 @@ int SPP::Rescode(const ObsRecord &oRec, const NavFile &nav, SatInfo *sat, Cartes
 int SPP::Resdop( const ObsRecord &oRec, const NavFile &nav, SatInfo sat[],RcvInfo &info,Cartesian &rec_v,double c_drfit,CMatrix &H, CMatrix &v)
 {
     double valid= 0;
-    double lam,rate,vi,rx,ry; //lam¼ÇÂ¼ÆµÂÊD1 ²¨³¤
-    Cartesian vs; //½ÓÊÕ»úÓëÎÀĞÇµÄÏà¶ÔËÙ¶È
+    double lam,rate,vi,rx,ry; //lamè®°å½•é¢‘ç‡D1 æ³¢é•¿
+    Cartesian vs; //æ¥æ”¶æœºä¸å«æ˜Ÿçš„ç›¸å¯¹é€Ÿåº¦
     for (int i=0; i<oRec.sat_num; i++)
     {
-        lam = 0.19029367279836487; //¦Ë1µÄ²¨³¤
+        lam = 0.19029367279836487; //Î»1çš„æ³¢é•¿
         double D1 = oRec.obsdata[i].D[0];
         if (D1 == 0.0) continue;
         if (!sat[i].flag) continue;
@@ -720,14 +720,14 @@ int SPP::Resdop( const ObsRecord &oRec, const NavFile &nav, SatInfo sat[],RcvInf
         vs.X += rx;
         vs.Y += ry;
         
-        //¼ÆËãµ¥Î»ÏòÁ¿
+        //è®¡ç®—å•ä½å‘é‡
         double l = (sat[i].pos.X - info.pos.X) ;
         double m = (sat[i].pos.Y - info.pos.Y);
         double n = (sat[i].pos.Z - info.pos.Z) ;
         double dist = sqrt(l*l + m*m + n*n);
-        l  /= dist; m /= dist; n /= dist;  //È·¶¨½ÓÊÕ»úµ½ÎÀĞÇµÄµ¥Î»ÏòÁ¿
+        l  /= dist; m /= dist; n /= dist;  //ç¡®å®šæ¥æ”¶æœºåˆ°å«æ˜Ÿçš„å•ä½å‘é‡
         
-        //¹¹ÔìÉè¼Æ¾ØÕó
+        //æ„é€ è®¾è®¡çŸ©é˜µ
         CMatrix B_row(1,4);
         B_row.Set_number(0, 0, -l);
         B_row.Set_number(0, 1, -m);
@@ -736,11 +736,11 @@ int SPP::Resdop( const ObsRecord &oRec, const NavFile &nav, SatInfo sat[],RcvInf
         H = (H,B_row);
         
         rate = l*vs.X + m*vs.Y +n*vs.Z; //+omega_e/c *(sat[i].velocity.Y*info.pos.X+sat[i].pos.Y*rec_v.X-
-                                       // sat[i].velocity.X*info.pos.Y-sat[i].pos.X*rec_v.Y); //Ó¦¸ÃÕâÀï²»ĞèÒªµØÇò×Ô×ª¸ÄÕı ÒòÎªÖ®Ç°¸ø³öµÄÎÀĞÇËÙ¶È¾ÍÊÇÒÑ¾­¾­¹ıÁËµØÇò×Ô×ª¸ÄÕı
+                                       // sat[i].velocity.X*info.pos.Y-sat[i].pos.X*rec_v.Y); //åº”è¯¥è¿™é‡Œä¸éœ€è¦åœ°çƒè‡ªè½¬æ”¹æ­£ å› ä¸ºä¹‹å‰ç»™å‡ºçš„å«æ˜Ÿé€Ÿåº¦å°±æ˜¯å·²ç»ç»è¿‡äº†åœ°çƒè‡ªè½¬æ”¹æ­£
         
         vi = -lam *D1 -(rate + c_drfit -c*sat[i].drift);
         
-        //¹¹Ôìv¾ØÕó
+        //æ„é€ vçŸ©é˜µ
         CMatrix v_row(1, 1);
         v_row.Set_number(0, 0, vi);
         v = (v, v_row);
@@ -768,7 +768,7 @@ int SPP::Resppp(const ObsRecord &oRec,const NavFile &nav, SatInfo *sat, RcvInfo 
 //    x.Set_number(3, 0, x[3][0]-12);
     
     
-    // ¹ÌÌå³±¸ÄÕı
+    // å›ºä½“æ½®æ”¹æ­£
 //    if (opt.tiedecorr >0)
 //    {
 //        ...........
@@ -780,7 +780,7 @@ int SPP::Resppp(const ObsRecord &oRec,const NavFile &nav, SatInfo *sat, RcvInfo 
     {
         prn = prn2num(oRec.obsdata[i]);
         if (!prn) continue;
-        //ÅĞ¶ÏÎÀĞÇĞÇÀúÊÇ·ñ¿ÉÓÃ
+        //åˆ¤æ–­å«æ˜Ÿæ˜Ÿå†æ˜¯å¦å¯ç”¨
         if ((! sat[i].flag) || (!info.ssat[prn].vs)) continue;
         
         dr = sat[i].pos - rr;
@@ -792,14 +792,14 @@ int SPP::Resppp(const ObsRecord &oRec,const NavFile &nav, SatInfo *sat, RcvInfo 
         
         if (r <= 0.0) continue ;
         
-        //¶ÔÁ÷²ãÑÓ³Ù
+        //å¯¹æµå±‚å»¶è¿Ÿ
         dtrp = 0.0;
         vart = 0.0;
 //         dtrp = Correction::tropSaas(rr, sat[i].pos);
 //         vart = SQR(ERR_SAAS);
         
         
-        //ÏàÎ»±¥ºÍ¸ÄÕı
+        //ç›¸ä½é¥±å’Œæ”¹æ­£
         //...........
         
         if (!corrmeas(oRec.obstime, oRec.obsdata[i],nav,rr,sat[i].pos, info.ssat[prn].azel, info.opt, dantr, dants,
@@ -833,7 +833,7 @@ int SPP::Resppp(const ObsRecord &oRec,const NavFile &nav, SatInfo *sat, RcvInfo 
             
             if (info.opt.ion_corr_mode >=3)
             {
-                //ÉèÖÃ¶ÔÁ÷²ãÌì¶¥·½Ïò²ÎÊı
+                //è®¾ç½®å¯¹æµå±‚å¤©é¡¶æ–¹å‘å‚æ•°
                 //............
             }
             
@@ -870,11 +870,11 @@ int SPP::Resppp(const ObsRecord &oRec,const NavFile &nav, SatInfo *sat, RcvInfo 
 int SPP::Estevl(const ObsRecord &oRec, const NavFile &nav, SatInfo sat[], RcvInfo &info)
 {
     CMatrix v,x,H;
-    Cartesian rec_v ={0,0,0}; //¼ÇÂ¼½ÓÊÕ»úËÙ¶È
-    double clock_drift = 0; //¼ÇÂ¼½ÓÊÕ»úÖÓ²î
+    Cartesian rec_v ={0,0,0}; //è®°å½•æ¥æ”¶æœºé€Ÿåº¦
+    double clock_drift = 0; //è®°å½•æ¥æ”¶æœºé’Ÿå·®
     double iter_count = 0;
     
-    //½øĞĞµü´ú¼ÆËã
+    //è¿›è¡Œè¿­ä»£è®¡ç®—
     do
     {
         v = CMatrix(0,1);  H = CMatrix(0,4); x=CMatrix(3,1);
@@ -882,7 +882,7 @@ int SPP::Estevl(const ObsRecord &oRec, const NavFile &nav, SatInfo sat[], RcvInf
         if (!Resdop(oRec, nav, sat, info, rec_v,clock_drift,H, v))
             return 0;
         
-        //½øĞĞ×îĞ¡¶ş³Ë¼ÆËã
+        //è¿›è¡Œæœ€å°äºŒä¹˜è®¡ç®—
         
         x =CMatrix::Inverse(CMatrix::Transpose(H)*H)*CMatrix::Transpose(H)*v;
         
@@ -900,7 +900,7 @@ int SPP::Estevl(const ObsRecord &oRec, const NavFile &nav, SatInfo sat[], RcvInf
     } while (abs(x.Num(0, 0)*x.Num(0, 0)+x.Num(1, 0)*x.Num(1, 0)+x.Num(2, 0)*x.Num(2, 0))>1E-8);
     
     
-    //ÌîĞ´infoĞÅÏ¢
+    //å¡«å†™infoä¿¡æ¯
     info.velocity.X = rec_v.X;
     info.velocity.Y = rec_v.Y;
     info.velocity.Z = rec_v.Z;
@@ -917,13 +917,13 @@ int SPP::Estpos(const ObsRecord &oRec, const NavFile &nav, SatInfo sat[], Cartes
     double dtr =0;
     double valid = 0;
     
-    //½øĞĞµü´ú¼ÆËã
+    //è¿›è¡Œè¿­ä»£è®¡ç®—
     do
     {
         B = CMatrix(0,4); L = CMatrix(0,1); x = CMatrix(0,1);
         iter_count++;
         
-        //¼ÆËãÉè¼Æ¾ØÕó
+        //è®¡ç®—è®¾è®¡çŸ©é˜µ
         if (!(valid = Rescode(oRec, nav, sat, pos,dtr, scheme, B, L,var,vsat)))
             return 0;
         
@@ -933,9 +933,9 @@ int SPP::Estpos(const ObsRecord &oRec, const NavFile &nav, SatInfo sat[], Cartes
             P.Set_number(k, k, 1.0/sqrt(var[k]));
            // L.Set_number(k, 0, L[k][0]/sqrt(var[k]));
         }
-        //¶ÔP½øĞĞ¸³Öµ....
+        //å¯¹Pè¿›è¡Œèµ‹å€¼....
     
-        //½øĞĞ×îĞ¡¶ş³Ë
+        //è¿›è¡Œæœ€å°äºŒä¹˜
         x = CMatrix::Inverse(CMatrix::Transpose(B)*P*B)*CMatrix::Transpose(B)*P*L;
         
     
@@ -954,7 +954,7 @@ int SPP::Estpos(const ObsRecord &oRec, const NavFile &nav, SatInfo sat[], Cartes
     if (!valsat(B,x,L,pos,valid))
         return 0;
     
-    //ÒÔÏÂ¼ÆËãÏàÓ¦Îó²î¾ØÕó
+    //ä»¥ä¸‹è®¡ç®—ç›¸åº”è¯¯å·®çŸ©é˜µ
     CMatrix V = B*x - L;
     CMatrix Q = CMatrix::Inverse(CMatrix::Transpose(B)*B);
     
@@ -1034,25 +1034,25 @@ int  SPP::Cal_RcvT(const GPSObsHdr & oHeader, const ObsRecord & oRec, const NavF
 //    //oRec.obstime;
 //    //ofstream log;
 //    SatInfo sat[MAXGPS];
-//    //´ı¹À¼ÆµÃ½ÓÊÕ»úÎ»ÖÃÓëÖÓ²î
+//    //å¾…ä¼°è®¡å¾—æ¥æ”¶æœºä½ç½®ä¸é’Ÿå·®
 //    Cartesian pos = info.pos;
 //    bool vsat[MAXGPS] = {false};
 //
 //    //log.open("Point_Positioning.log", ios::app);
 //
 //
-//    //log << "¿ªÊ¼µ¥µã¶¨Î»" << "¹Û²â¼ÇÂ¼Ê±¼ä" << oRec.obstime_c<<endl;
+//    //log << "å¼€å§‹å•ç‚¹å®šä½" << "è§‚æµ‹è®°å½•æ—¶é—´" << oRec.obstime_c<<endl;
 //
 //    if (!Satposs( oRec, nav, sat))
 //    {
-//        //log << "¼ÆËãÎÀĞÇÎ»ÖÃÓĞÎó µ¥µã¶¨Î»Ê§°Ü£¡" << endl;
+//        //log << "è®¡ç®—å«æ˜Ÿä½ç½®æœ‰è¯¯ å•ç‚¹å®šä½å¤±è´¥ï¼" << endl;
 //
 //        return 0;
 //    }
 //
 //    if (!Estpos( oRec, nav, sat, pos , scheme, info,vsat))
 //    {
-//        //log << "¼ÆËã½ÓÊÕ»úÎ»ÖÃÊ±³ö´í µ¥µã¶¨Î»Ê§°Ü£¡" <<endl;
+//        //log << "è®¡ç®—æ¥æ”¶æœºä½ç½®æ—¶å‡ºé”™ å•ç‚¹å®šä½å¤±è´¥ï¼" <<endl;
 //        for (int i = 0;i< MAXGPS ;i++)
 //        {
 //            info.ssat[i].vs = false;
@@ -1099,7 +1099,7 @@ int  SPP::Cal_RcvInfo(const GPSObsHdr & oHeader, const ObsRecord & oRec, const N
 	//oRec.obstime;
 	//ofstream log;
     SatInfo sat[MAXGPS];
-    //´ı¹À¼ÆµÃ½ÓÊÕ»úÎ»ÖÃÓëÖÓ²î
+    //å¾…ä¼°è®¡å¾—æ¥æ”¶æœºä½ç½®ä¸é’Ÿå·®
     Cartesian pos = info.pos;
     bool vsat[MAXGPS] = {false};
     
@@ -1109,32 +1109,32 @@ int  SPP::Cal_RcvInfo(const GPSObsHdr & oHeader, const ObsRecord & oRec, const N
         
     }
 
-	//log << "¿ªÊ¼µ¥µã¶¨Î»" << "¹Û²â¼ÇÂ¼Ê±¼ä" << oRec.obstime_c<<endl;
+	//log << "å¼€å§‹å•ç‚¹å®šä½" << "è§‚æµ‹è®°å½•æ—¶é—´" << oRec.obstime_c<<endl;
 	
     if (!Satposs( oRec, nav, sat))
     {
-        //log << "¼ÆËãÎÀĞÇÎ»ÖÃÓĞÎó µ¥µã¶¨Î»Ê§°Ü£¡" << endl;
+        //log << "è®¡ç®—å«æ˜Ÿä½ç½®æœ‰è¯¯ å•ç‚¹å®šä½å¤±è´¥ï¼" << endl;
         return 0;
     }
     
     if (!Estpos( oRec, nav, sat, pos , scheme, info,vsat))
     {
-        //log << "¼ÆËã½ÓÊÕ»úÎ»ÖÃÊ±³ö´í µ¥µã¶¨Î»Ê§°Ü£¡" <<endl;
+        //log << "è®¡ç®—æ¥æ”¶æœºä½ç½®æ—¶å‡ºé”™ å•ç‚¹å®šä½å¤±è´¥ï¼" <<endl;
         return 0;
     }
 	info.diff = CoordTrans::Cart2Topo(oHeader.approxPos,pos);
 	
     
-    //¼ÆËã½ÓÊÕ»úËÙ¶È
+    //è®¡ç®—æ¥æ”¶æœºé€Ÿåº¦
     if (!Estevl( oRec, nav, sat, info))
     {
-        //log << "½ÓÊÕ»úËÙ¶È¼ÆËãÊ§°Ü£¡"<<endl;
+        //log << "æ¥æ”¶æœºé€Ÿåº¦è®¡ç®—å¤±è´¥ï¼"<<endl;
     }
     else
         ;
-       // log << "½ÓÊÕ»úËÙ¶È¼ÆËã³É¹¦£¡"<<endl;
+       // log << "æ¥æ”¶æœºé€Ÿåº¦è®¡ç®—æˆåŠŸï¼"<<endl;
 
-	//log << "µ¥µã¶¨Î»³É¹¦£¡" << endl;
+	//log << "å•ç‚¹å®šä½æˆåŠŸï¼" << endl;
 	//log.close();
     
     for (int i = 0;i< MAXGPS ;i++)

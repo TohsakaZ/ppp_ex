@@ -12,11 +12,11 @@ Correction::~Correction()
 
 }
 
-/*****************¶¨Òå¶ÔÁ÷²ãÑÓ³Ù¸ÄÕı¼ò»¯Ä£ĞÍº¯Êı*******************************/
+/*****************å®šä¹‰å¯¹æµå±‚å»¶è¿Ÿæ”¹æ­£ç®€åŒ–æ¨¡å‹å‡½æ•°*******************************/
 /*
-   º¯ÊıÃû£ºtropSimple()
-   ÊäÈë£ºE ÎÀĞÇÏà¶ÔÓÚ²âÕ¾µÄ¸ß¶È½Ç
-   Êä³ö£º ¶ÔÁ÷²ãÕÛÉäÑÓ³Ù¸ÄÕı£¬µ¥Î»£¨m£©
+   å‡½æ•°åï¼štropSimple()
+   è¾“å…¥ï¼šE å«æ˜Ÿç›¸å¯¹äºæµ‹ç«™çš„é«˜åº¦è§’
+   è¾“å‡ºï¼š å¯¹æµå±‚æŠ˜å°„å»¶è¿Ÿæ”¹æ­£ï¼Œå•ä½ï¼ˆmï¼‰
 */
 double Correction::tropSimple(const double E)
 {
@@ -25,19 +25,19 @@ double Correction::tropSimple(const double E)
 	return (ans);
 }
 
-/*****************¶¨Òå¶ÔÁ÷²ãÕÛÉä¸ÄÕıSAASÄ£ĞÍº¯Êı*******************************/
+/*****************å®šä¹‰å¯¹æµå±‚æŠ˜å°„æ”¹æ­£SAASæ¨¡å‹å‡½æ•°*******************************/
 /*
-   º¯ÊıÃû£ºtropSaas();
-   ÊäÈë£ºX1           ²âÕ¾µÑ¿¨¶û×ø±ê
-        X2           ÎÀĞÇµÑ¿¨¶û×ø±ê
-		meteoData_0  ²âµÃµÄÆøÏó×ÊÁÏ
-   Êä³ö£º¶ÔÁ÷²ãÕÛÉäÑÓ³Ù
+   å‡½æ•°åï¼štropSaas();
+   è¾“å…¥ï¼šX1           æµ‹ç«™ç¬›å¡å°”åæ ‡
+        X2           å«æ˜Ÿç¬›å¡å°”åæ ‡
+		meteoData_0  æµ‹å¾—çš„æ°”è±¡èµ„æ–™
+   è¾“å‡ºï¼šå¯¹æµå±‚æŠ˜å°„å»¶è¿Ÿ
 */
 double Correction::tropSaas(const Cartesian &X1,const Cartesian &X2)
 {
 	Topopolar T2p;
     Geodetic pos;
-    meteodata meteodata_0; //±ê×¼Ìõ¼şÏÂµÄÆøÏóÊı¾İ
+    meteodata meteodata_0; //æ ‡å‡†æ¡ä»¶ä¸‹çš„æ°”è±¡æ•°æ®
     const double temp0 = 15.0;
 
     double e,z,trph,trpw;
@@ -72,19 +72,19 @@ double Correction::tropSaas(const Cartesian &X1,const Cartesian &X2)
 //        - aa / (tan(T2p.E*pi / 180.0)*tan(T2p.E*pi / 180.0)));
 }
 
-/*****************¶¨ÒåµçÀë²ãÑÓ³ÙKlobucharÄ£ĞÍ¸ÄÕıº¯Êı*************************/
+/*****************å®šä¹‰ç”µç¦»å±‚å»¶è¿ŸKlobucharæ¨¡å‹æ”¹æ­£å‡½æ•°*************************/
 /*
-   º¯ÊıÃû£ºionKlobuchar()
-   ÊäÈë£ºa[4],b[4]   KlobucharÄ£ĞÍÏµÊı£¬´ÓĞÇÀúÎÄ¼şÖĞµÄÍ·ÎÄ¼şheader»ñÈ¡
-        gpstime     ¹Û²âÊ±¿ÌµÄGPSÊ±£¬µ¥Î»£¨S£©
-		X1          ²âÕ¾µÄµÑ¿¨¶û×ø±ê
-		X2          ÎÀĞÇµÄµÑ¿¨¶û×ø±ê
-   Êä³ö£ºÓÃKlobuchar¸ÄÕıÄ£ĞÍ¼ÆËãµÃ³öµçÀë²ãÑÓ³Ù¸ÄÕı£¬µ¥Î»£¨m£©
+   å‡½æ•°åï¼šionKlobuchar()
+   è¾“å…¥ï¼ša[4],b[4]   Klobucharæ¨¡å‹ç³»æ•°ï¼Œä»æ˜Ÿå†æ–‡ä»¶ä¸­çš„å¤´æ–‡ä»¶headerè·å–
+        gpstime     è§‚æµ‹æ—¶åˆ»çš„GPSæ—¶ï¼Œå•ä½ï¼ˆSï¼‰
+		X1          æµ‹ç«™çš„ç¬›å¡å°”åæ ‡
+		X2          å«æ˜Ÿçš„ç¬›å¡å°”åæ ‡
+   è¾“å‡ºï¼šç”¨Klobucharæ”¹æ­£æ¨¡å‹è®¡ç®—å¾—å‡ºç”µç¦»å±‚å»¶è¿Ÿæ”¹æ­£ï¼Œå•ä½ï¼ˆmï¼‰
 */
 double Correction::ionKlobuchar(const double a[4],const double b[4],const int &gpstime,
    const	Cartesian &X1,const Cartesian &X2)
 {
-	double Psi, Phi_i, lambda_i, Phi_m;  //µ¥Î»ÊÇsemi¡ªcircls
+	double Psi, Phi_i, lambda_i, Phi_m;  //å•ä½æ˜¯semiâ€”circls
 	Topopolar T2p;
 	Geodetic g1;
 	double t, F, PER, AMP, x;
@@ -120,7 +120,7 @@ double Correction::ionKlobuchar(const double a[4],const double b[4],const int &g
 	Phi_m = Phi_i + 0.064*cos((lambda_i - 1.617)*pi);
 	F = 1.0 + 16.0*pow((0.53 - T2p.E / 180.0),3);
 	
-	//Phi_mµÄµ¥Î»ÊÇ·ñÊÇsemi¡ª¡ªcircles
+	//Phi_mçš„å•ä½æ˜¯å¦æ˜¯semiâ€”â€”circles
 	PER = b[0] + b[1] * (Phi_m) + b[2] * pow(Phi_m, 2)
 		+ b[3] * pow(Phi_m, 3);
 	if (PER < 72000) PER = 72000;
@@ -136,12 +136,12 @@ double Correction::ionKlobuchar(const double a[4],const double b[4],const int &g
 	else return c*(F*5.0E-9);
 }
 
-/*****************µØÇò×Ô×ª¸ÄÕıº¯Êı*************************/
+/*****************åœ°çƒè‡ªè½¬æ”¹æ­£å‡½æ•°*************************/
 /*
-º¯ÊıÃû£ºEarthRotatCorr()
-ÊäÈë£ºt       ÎÀĞÇĞÅºÅÕæÊµ´«²¥Ê±¼ä
-     SatPos   ÎÀĞÇÎ»ÖÃµÄµÑ¿¨¶û×ø±ê
-Êä³ö£ºµØÇò×Ô×ª¸ÄÕıºóµÄÎÀĞÇ×ø±ê
+å‡½æ•°åï¼šEarthRotatCorr()
+è¾“å…¥ï¼št       å«æ˜Ÿä¿¡å·çœŸå®ä¼ æ’­æ—¶é—´
+     SatPos   å«æ˜Ÿä½ç½®çš„ç¬›å¡å°”åæ ‡
+è¾“å‡ºï¼šåœ°çƒè‡ªè½¬æ”¹æ­£åçš„å«æ˜Ÿåæ ‡
 */
 Cartesian Correction::EarthRotatCorr(double t, Cartesian SatPos)
 {

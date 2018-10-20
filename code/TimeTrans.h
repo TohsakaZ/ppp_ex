@@ -1,7 +1,7 @@
 /*************************************************
 Beta1.1
-    ĞŞ¸ÄÊ±¼ä£º2017.07.18
-    ĞŞ¸ÄÄÚÈİ£º¶¨Òå½á¹¹Ìå¡¢³£Êı
+    ä¿®æ”¹æ—¶é—´ï¼š2017.07.18
+    ä¿®æ”¹å†…å®¹ï¼šå®šä¹‰ç»“æ„ä½“ã€å¸¸æ•°
 
 *************************************************/
 #ifndef TimeTrans_H
@@ -20,11 +20,11 @@ public:
 	~TimeTrans();
 
     static GPSTime CalendarTime2GPSTime(const CalendarTime &A);
-	static JulianDay CalendarTime2JulianDay(const CalendarTime &A);//Í¨ÓÃÊ±×ª»»ÈåÂÔÈÕ
-	static CalendarTime JulianDay2CalendarTime(const JulianDay &A);//ÈåÂÔÈÕ×ª»»Í¨ÓÃÊ±
-	static GPSTime  JulianDay2GPSTime(const JulianDay &A);//ÈåÂÔÈÕ×ª»»GPSÊ±
-	static JulianDay GPSTime2JulianDay(const GPSTime &A);//GPSÊ±×ª»»ÈåÂÔÈÕ
-	static DayofYear CalendarTime2DayofYear(const CalendarTime &A);//Í¨ÓÃÊ±×ª»»Äê»ıÈÕ(ÕûÊıÌì)
+	static JulianDay CalendarTime2JulianDay(const CalendarTime &A);//é€šç”¨æ—¶è½¬æ¢å„’ç•¥æ—¥
+	static CalendarTime JulianDay2CalendarTime(const JulianDay &A);//å„’ç•¥æ—¥è½¬æ¢é€šç”¨æ—¶
+	static GPSTime  JulianDay2GPSTime(const JulianDay &A);//å„’ç•¥æ—¥è½¬æ¢GPSæ—¶
+	static JulianDay GPSTime2JulianDay(const GPSTime &A);//GPSæ—¶è½¬æ¢å„’ç•¥æ—¥
+	static DayofYear CalendarTime2DayofYear(const CalendarTime &A);//é€šç”¨æ—¶è½¬æ¢å¹´ç§¯æ—¥(æ•´æ•°å¤©)
 	
 };
 

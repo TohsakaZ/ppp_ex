@@ -1,13 +1,13 @@
 /*****************************************************************************
 Beta1.0
-    ĞŞ¸ÄÊ±¼ä£º2017.7.18
-    ĞŞ¸ÄÄÚÈİ£º1£©¶¨ÒåÁË¶ÁÈ¡GPS¹Û²âÊı¾İÎÄ¼şº¯Êı
-	         2£©ÔÚObsFile.CPPÖĞÍê³ÉÁË¶ÁÈ¡GPS¹Û²âÊı¾İÎÄ¼şº¯Êı
+    ä¿®æ”¹æ—¶é—´ï¼š2017.7.18
+    ä¿®æ”¹å†…å®¹ï¼š1ï¼‰å®šä¹‰äº†è¯»å–GPSè§‚æµ‹æ•°æ®æ–‡ä»¶å‡½æ•°
+	         2ï¼‰åœ¨ObsFile.CPPä¸­å®Œæˆäº†è¯»å–GPSè§‚æµ‹æ•°æ®æ–‡ä»¶å‡½æ•°
 
 Beta1.11
-	ĞŞ¸ÄÊ±¼ä£º2017.7.18
-	ĞŞ¸ÄÄÚÈİ£º1£©ĞŞ¸ÄÁË±äÁ¿Ãû¡£
-			 2£©Ôö¼ÓÁËÒ»Ğ©º¯Êı¡£
+	ä¿®æ”¹æ—¶é—´ï¼š2017.7.18
+	ä¿®æ”¹å†…å®¹ï¼š1ï¼‰ä¿®æ”¹äº†å˜é‡åã€‚
+			 2ï¼‰å¢åŠ äº†ä¸€äº›å‡½æ•°ã€‚
 
 
 *******************************************************************************/
@@ -25,21 +25,21 @@ class ObsFile
 {
 public:
 	ObsFile();
-	ObsFile(const string &name);//name±íÊ¾¹Û²âÊı¾İÎÄ¼şÃû
+	ObsFile(const string &name);//nameè¡¨ç¤ºè§‚æµ‹æ•°æ®æ–‡ä»¶å
 	~ObsFile();
 
 private:
-	string _filename;//¹Û²âÊı¾İÎÄ¼şÃû
-	vector<ObsRecord> _data;//¹Û²âÊı¾İ¼ÇÂ¼
-	GPSObsHdr _header;//¹Û²âÊı¾İÍ·ÎÄ¼ş
-    void convert(); //½«¹Û²âÊı¾İÎÄ¼ş´«Èëµ½P¡¢L¡¢DÖĞ
+	string _filename;//è§‚æµ‹æ•°æ®æ–‡ä»¶å
+	vector<ObsRecord> _data;//è§‚æµ‹æ•°æ®è®°å½•
+	GPSObsHdr _header;//è§‚æµ‹æ•°æ®å¤´æ–‡ä»¶
+    void convert(); //å°†è§‚æµ‹æ•°æ®æ–‡ä»¶ä¼ å…¥åˆ°Pã€Lã€Dä¸­
 
 public:
-	bool ReadFile(const string &name);//¶ÁÈ¡¹Û²âÊı¾İÎÄ¼ş
-	string getName() const;//»ñÈ¡¹Û²âÊı¾İÎÄ¼şÃû
-	ObsRecord Data(int num) const; //È¡³öÒ»Ìõ¼ÇÂ¼
-	int getDataNum() const; //µÃµ½¼ÇÂ¼ÌõÊı
-    int getObstype(string type); //µÃµ½¹Û²âÀàĞÍÎ»ÖÃ
+	bool ReadFile(const string &name);//è¯»å–è§‚æµ‹æ•°æ®æ–‡ä»¶
+	string getName() const;//è·å–è§‚æµ‹æ•°æ®æ–‡ä»¶å
+	ObsRecord Data(int num) const; //å–å‡ºä¸€æ¡è®°å½•
+	int getDataNum() const; //å¾—åˆ°è®°å½•æ¡æ•°
+    int getObstype(string type); //å¾—åˆ°è§‚æµ‹ç±»å‹ä½ç½®
 	const  GPSObsHdr &Header() const;
     
 };

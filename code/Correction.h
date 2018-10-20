@@ -18,21 +18,21 @@ public:
 	Correction();
 	~Correction();
 
-	/************ÎÀĞÇÖÓ²î¸ÄÕı******************************/
+	/************å«æ˜Ÿé’Ÿå·®æ”¹æ­£******************************/
 
-	/************Ïà¶ÔÂÛĞ§Ó¦¸ÄÕı****************************/
+	/************ç›¸å¯¹è®ºæ•ˆåº”æ”¹æ­£****************************/
 
-	/************¶ÔÁ÷²ãÑÓ³Ù¸ÄÕı****************************/
-	static double tropSimple(const double E);    //¶ÔÁ÷²ãÕÛÉäÑÓ³ÙµÄ¼ò»¯Ä£ĞÍ
-	static double tropSaas(const Cartesian &X1, const Cartesian &X2);      //¶ÔÁ÷²ãÕÛÉäÑÓ³ÙµÄSAASÄ£ĞÍ 
+	/************å¯¹æµå±‚å»¶è¿Ÿæ”¹æ­£****************************/
+	static double tropSimple(const double E);    //å¯¹æµå±‚æŠ˜å°„å»¶è¿Ÿçš„ç®€åŒ–æ¨¡å‹
+	static double tropSaas(const Cartesian &X1, const Cartesian &X2);      //å¯¹æµå±‚æŠ˜å°„å»¶è¿Ÿçš„SAASæ¨¡å‹ 
 
 
-	/************µçÀë²ãÑÓ³Ù¸ÄÕı***************************/
+	/************ç”µç¦»å±‚å»¶è¿Ÿæ”¹æ­£***************************/
 	static double ionKlobuchar(const double a[4],const double b[4],const int &gpstime,
-		const Cartesian &X1,const Cartesian &X2);  //KlobucharÄ£ĞÍ¶Ô¶ÔµçÀë²ãÑÓ³Ù
+		const Cartesian &X1,const Cartesian &X2);  //Klobucharæ¨¡å‹å¯¹å¯¹ç”µç¦»å±‚å»¶è¿Ÿ
 
-	/************µØÇò×Ô×ª¸ÄÕı*****************************/
-	static Cartesian EarthRotatCorr(double t, Cartesian SatPos);//tÎªÎÀĞÇĞÅºÅÕæÊµ´«²¥Ê±¼ä£¬£¨½ÓÊÕ»úÖÓÃæÊ±+½ÓÊÕ»úÖÓ²î/c£©-(ÎÀĞÇ·¢ÉäÖÓÃæÊ±)
+	/************åœ°çƒè‡ªè½¬æ”¹æ­£*****************************/
+	static Cartesian EarthRotatCorr(double t, Cartesian SatPos);//tä¸ºå«æ˜Ÿä¿¡å·çœŸå®ä¼ æ’­æ—¶é—´ï¼Œï¼ˆæ¥æ”¶æœºé’Ÿé¢æ—¶+æ¥æ”¶æœºé’Ÿå·®/cï¼‰-(å«æ˜Ÿå‘å°„é’Ÿé¢æ—¶)
 
 
 
