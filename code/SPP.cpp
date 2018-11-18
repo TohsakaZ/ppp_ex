@@ -125,6 +125,7 @@ void SPP::pppos(RcvInfo &info, const ObsRecord &oRec, const NavFile &nav)
     
     udstate_ppp(info, oRec, nav);
     
+    // 改正用sp3计算
     Satposs(oRec, nav, sat);
     
     //分配矩阵
@@ -204,25 +205,6 @@ filter(const ObsRecord &oRec,const RcvInfo &info, CMatrix &x, CMatrix &P, CMatri
     log << endl;
     log.close();
     
-//    log.open("P.txt",ios::app);
-//    log << k << ": " << endl;
-//    for (kk = 0;kk <k; kk++){
-//        for (ll = 0; ll<k;ll++)
-//            log << P_[kk][ll] << "  ";
-//        log << endl;
-//    }
-//    log << endl;
-//    log.close();
-//
-//    log.open("H.txt",ios::app);
-//    log << m << " " << k << ": " <<endl;
-//    for (kk = 0;kk<m;kk++){
-//        for (ll = 0; ll<k; ll++ )
-//            log << H_[kk][ll] << "  ";
-//        log <<endl;
-//    }
-//    log << endl;
-//    log.close();
     
     CMatrix Q = CMatrix::Inverse(H_*P_*CMatrix::Transpose(H_) + R);
     CMatrix Kk = P_*CMatrix::Transpose(H_) *Q;
@@ -372,19 +354,40 @@ double SPP::gfmeas(const GpsObservation &obs)
 int SPP::corrmeas(const GPSTime &time, const GpsObservation &obs,const NavFile &nav, const Cartesian &X1,const Cartesian &X2 ,double azel[],const Adjust_Scheme &opt,
                     double dantr[],double dants[],double phw,double meas[],double var[] )
 {
-
-    double L1,P1,ion,vari;
+    double L1,P1,L2,P2,ion,vari,var_temp;
     meas[0] = meas[1] = var[0] = var[1] =0.0;
-    
-    if (obs.L[0] == 0.0 || obs.P[0] == 0.0) return 0;
-    L1 = obs.L[0]*lamda0;
-    P1 = obs.P[0];
-    
-    //这里应该有相应的电离层 改正
-//    ion = Correction::ionKlobuchar(nav.Header().ion_alpha, nav.Header().ion_beta,time.tow.sn , X1, X2);
-//    vari = SQR(ion*ERR_BRDCI);
+
     ion = 0.0;
     vari = 0.0;
+    if (  3 != opt.ion_corr_mode || obs.L[0] == 0.0 || obs.L[1] == 0.0 || obs.P[0] == 0.0 || obs.P[1] == 0.0)
+    {   // 没有双频观测值
+        L1 = obs.L[0]*lamda0;
+        P1 = obs.P[0];
+        ion = Correction::ionKlobuchar(nav.Header().ion_alpha, nav.Header().ion_beta,time.tow.sn , X1, X2);
+        vari = SQR(ion*ERR_BRDCI);
+    }
+    else{ // 双频无电离层组合
+
+        L1 = obs.L[0]*lamda0; L2 = obs.L[1]*lamda1;
+        P1 = obs.P[0]; P2 = obs.P[1];
+
+        double gamma = SQR(lamda1) / SQR(lamda0);
+        P1 = (gamma*P1-P2) / (gamma-1.0);
+        L1 = (gamma*L1-L2) / (gamma-1.0);
+
+    }
+    // 如果双频不能用 且L1频率也无法使用 则返回0
+    if (P1 == 0.0 || L1 == 0.0) return 0;
+    
+    //这里应该有相应的电离层 改正 
+   // if (xxxx.ionmode=  )
+   // {
+   //     ......
+   // }
+    //ion = Correction::ionKlobuchar(nav.Header().ion_alpha, nav.Header().ion_beta,time.tow.sn , X1, X2);
+    //vari = SQR(ion*ERR_BRDCI);
+    //ion = 0.0;
+    //vari = 0.0;
     
     
     meas[0] = L1 + ion ;
@@ -520,6 +523,8 @@ SatInfo SPP::Cal_SatInfo(const NavRecord & record, GPSTime t)
  
     sat.delta_t = record.SClockBias + record.SClockDri*tk + record.SClockDriV*tk*tk;
     sat.delta_t -= 2.0 * sqrt(GM)*record.sqrtA*sin(Ek)*record.e/SQR(c);
+    
+    //sat.delta_t += 2.0 * sqrt(GM)*record.sqrtA*sin(Ek)*record.e/SQR(c);
     
     //计算卫星星历误差
     if (record.SatAccur<0 || record.SatAccur>15)
@@ -793,10 +798,10 @@ int SPP::Resppp(const ObsRecord &oRec,const NavFile &nav, SatInfo *sat, RcvInfo 
         if (r <= 0.0) continue ;
         
         //对流层延迟
-        dtrp = 0.0;
-        vart = 0.0;
-//         dtrp = Correction::tropSaas(rr, sat[i].pos);
-//         vart = SQR(ERR_SAAS);
+        //dtrp = 0.0;
+        //vart = 0.0;
+        dtrp = Correction::tropSaas(rr, sat[i].pos);
+        vart = SQR(ERR_SAAS);
         
         
         //相位饱和改正
@@ -807,11 +812,6 @@ int SPP::Resppp(const ObsRecord &oRec,const NavFile &nav, SatInfo *sat, RcvInfo 
             continue;
         
 
-        log1.setf(ios::fixed);
-        log2.setf(ios::fixed);
-        log2 << c*sat[i].delta_t << " ";
-        log1 << r << " ";
-        
 
         r += -c*sat[i].delta_t + dtrp;
         
@@ -851,11 +851,6 @@ int SPP::Resppp(const ObsRecord &oRec,const NavFile &nav, SatInfo *sat, RcvInfo 
         }
     }
     
-    log1 << endl;
-    log2 << endl;
-    
-    log1.close();
-    log2.close();
 
     for (int i =0;i <nv; i++) for (int j = 0;j<nv;j++)
     {
@@ -1151,7 +1146,7 @@ int  SPP::Cal_RcvInfo(const GPSObsHdr & oHeader, const ObsRecord & oRec, const N
     }
     if (scheme.mode >=1)
     {
-        //cout << "hello world!" << endl;
+        cout << "hello world!" << endl;
         pppos(info,oRec, nav);
     }
 	return 1;

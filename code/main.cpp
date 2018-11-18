@@ -11,7 +11,9 @@ int  main()
 
 
 
-    Adjust_Scheme scheme = { 1,15.0 ,-1,0,1,0.5};
+    Adjust_Scheme scheme = {1,15.0 ,-1,0,1,0.5};
+    scheme.mode = 1;
+    scheme.ion_corr_mode = 0 ;
 
     SPP::propos(navfile, obsfile,scheme);
     
